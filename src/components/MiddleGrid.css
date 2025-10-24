@@ -1,0 +1,26 @@
+.middle-grid {  background: #1a1a1a;  border-radius: 10px;  padding: var(--card-pad, 12px);  border: 1px solid #2a2a2a;  overflow: hidden;  display: grid;  grid-template-rows: auto 1fr var(--final-bar-h, 44px);  gap: var(--cell-gap, 6px);  width: 100%;  height: 100%;}
+.middle-grid h3 {  grid-row: 1;  color: #4CAF50;  margin: 0;  margin-bottom: calc(var(--cell-gap, 6px) * 0.5);  text-align: center;  font-size: var(--h3-size, 16px);  line-height: 1;}
+.middle-grid h3 .mini-btn {  margin-left: 8px;  font-size: 11px;  padding: 3px 8px;  border-radius: 6px;  background: #2b3a2b;  color: #c7f7cf;  border: 1px solid #395539;  cursor: pointer; }
+.middle-grid h3 .mini-btn:hover {  background: #355b35; }
+.middle-answers {  grid-row: 2;  display: grid;  gap: calc(var(--cell-gap, 6px));  margin: 0;  align-content: stretch;  align-items: stretch;  min-height: 0;  height: 100%;}
+.middle-answers-4x4 {  grid-template-columns: repeat(4, minmax(0, 1fr));  grid-template-rows: repeat(4, minmax(0, 1fr));}
+.middle-answer {  position: relative;  background: #242424;  border-radius: 8px;  padding: calc(var(--card-pad, 12px) * 0.4);  border: 1px solid #3a3a3a;  transition: all 0.3s ease;  display: flex;  align-items: center;  justify-content: center;  min-height: 0;}
+.middle-answer.revealed {  border-color: #4CAF50;  background: #1e3a1e;}
+.middle-answer.selected {  outline: 2px solid #8bc34a;  box-shadow: 0 0 0 2px #8bc34a inset; }
+.middle-answer.hidden {  background: #141414;  border: 2px dashed #444;  color: #888;  opacity: 1;}
+.middle-answer.locked {  background: #1e3a1e;  border-color: #45a049;  color: #d7ffd7;  cursor: not-allowed; }
+.middle-answer.hidden::after {  content: "\1F512";  /* lock glyph */  position: absolute;  top: 6px;  right: 8px;  font-size: 0.95rem;  color: #666;}
+.answer-text {  color: #fff;  font-size: var(--selection-font, 16px);  font-weight: bold;  font-family: monospace;  line-height: 1;  text-align: center;}
+.answer-text .hl {  color: var(--accent, #ffd54d);  text-shadow: 0 0 6px rgba(255, 213, 77, 0.6); }
+.final-word-section {  grid-row: 3;  background: #242424;  border-radius: 8px;  padding: 0.25rem 0.5rem;  border: 1px solid #6d5c00;  text-align: center;  display: grid;  grid-template-columns: 1fr auto;  align-items: center;  gap: var(--cell-gap, 6px);}
+.final-answers {  grid-row: 3;  background: #181818;  border: 1px solid #3a3a3a;  border-radius: 8px;  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);  display: grid;  grid-template-rows: auto 1fr; }
+.final-answers .selection-header {  font-size: calc(var(--selection-font, 16px) * 0.85);  color: #bbb;  padding: 2px 6px;  border-bottom: 1px solid #2a2a2a;  text-transform: uppercase; }
+.final-answers .selection-body {  height: 100%;  display: grid;  grid-template-columns: repeat(2, minmax(0, 1fr));  grid-template-rows: repeat(2, minmax(0, 1fr));  gap: calc(var(--cell-gap, 6px) * 0.8);  font-family: monospace;  font-weight: 800;  letter-spacing: 0.8px;  align-content: stretch;  align-items: stretch;  padding: 4px 6px;  overflow: hidden; }
+.final-answers .locked-line {  background: #0f1a0f;  border: 1px solid #2b4a2b;  color: #8ef59a;  border-radius: 8px;  padding: 4px 6px;  text-align: center;  white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis;  display: flex;  align-items: center;  justify-content: center;  font-size: calc(var(--selection-font, 16px) * 0.92); }
+.final-word-section h4 {  color: #FFD700;  margin: 0;  font-size: calc(var(--h3-size, 16px) * 0.9);  line-height: 1;  text-align: left;}
+.final-word-input {  display: flex;  gap: calc(var(--cell-gap, 6px));  align-items: center;  justify-content: flex-end;}
+.final-word-input input {  background: #333;  border: 1px solid #6d5c00;  color: #fff;  padding: 0.25rem 0.5rem;  border-radius: 6px;  font-size: calc(var(--selection-font, 16px) * 0.95);  font-weight: bold;  text-align: center;  min-width: 160px;}
+.final-word-input input:focus {  outline: none;  border-color: #FFA500;}
+.final-word-input button {  background: #FFD700;  color: #000;  border: none;  padding: 0.4rem 0.9rem;  border-radius: 6px;  cursor: pointer;  font-weight: bold;  font-size: calc(var(--selection-font, 16px) * 0.95);}
+.final-word-input button:hover:not(:disabled) {  background: #FFA500;}
+.final-word-input button:disabled {  background: #666;  cursor: not-allowed;  color: #999;} .game-complete-message {  background: #1e3a1e;  border: 2px solid #4CAF50;  color: #4CAF50;  padding: 0.6rem;  border-radius: 8px;  text-align: center;  font-size: calc(var(--selection-font, 16px) * 0.95);  font-weight: bold;  margin-top: 0.5rem;} .missing-letters {  background: #333;  color: #ffd54f;  padding: 0.4rem 0.6rem;  border-radius: 6px;  font-family: monospace;  font-size: var(--selection-font, 16px);  font-weight: bold;  display: inline-block;  margin: 0.25rem 0;  letter-spacing: 2px;} .missing-letters::before {  content: "Missing Letters: ";  color: #ccc;  font-weight: normal;  font-family: sans-serif;  letter-spacing: normal; }

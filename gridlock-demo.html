@@ -1,0 +1,531 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>GridLock Game - 5 Grid Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 10px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .game-layout {
+            display: grid;
+            grid-template-areas: 
+                "top-left . top-right"
+                ". middle ."
+                "bottom-left . bottom-right";
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 8px;
+            flex: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .outer-grid {
+            grid-area: var(--grid-area);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .middle-grid {
+            grid-area: middle;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .grid-title {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .grid-blocks {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            flex: 1;
+        }
+        
+        .block {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            padding: 4px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        
+        .block:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .block.selected {
+            background: rgba(255,215,0,0.4);
+            border-color: #FFD700;
+            transform: scale(1.02);
+        }
+        
+        .block.locked {
+            background: rgba(0,255,0,0.3);
+            border-color: #00FF00;
+            cursor: not-allowed;
+        }
+        
+        .block.wrong {
+            animation: shake 0.5s ease-in-out;
+            background: rgba(255,0,0,0.3);
+            border-color: #FF0000;
+        }
+        
+        .locked-blocks {
+            background: rgba(0,255,0,0.2);
+            border-radius: 4px;
+            padding: 5px;
+            margin-bottom: 5px;
+            min-height: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+        
+        .correct-answers {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            padding: 5px;
+            margin-top: 5px;
+            color: white;
+            font-size: 0.7rem;
+        }
+        
+        .middle-answer {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            padding: 5px;
+            margin: 2px 0;
+            color: white;
+            text-align: center;
+            min-height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        
+        .middle-answer.revealed {
+            background: rgba(0,255,0,0.3);
+            border-color: #00FF00;
+        }
+        
+        .final-word-input {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            padding: 5px;
+            color: white;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .final-word-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            padding: 5px 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+        
+        .btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+        
+        .status {
+            color: white;
+            text-align: center;
+            margin: 5px 0;
+            font-size: 0.8rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .grid-complete {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .grid-complete .grid-title {
+            color: #FFD700;
+            font-size: 1rem;
+        }
+        
+        .grid-complete::after {
+            content: "GRID LOCKED!";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,215,0,0.9);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            z-index: 10;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        .outer-grid.top-left { --grid-area: top-left; }
+        .outer-grid.top-right { --grid-area: top-right; }
+        .outer-grid.bottom-left { --grid-area: bottom-left; }
+        .outer-grid.bottom-right { --grid-area: bottom-right; }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+            50% { box-shadow: 0 0 15px rgba(255,215,0,0.8); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>GridLock</h1>
+        </div>
+        
+        <div class="game-layout">
+            <div class="outer-grid top-left">
+                <div class="grid-title">Grid 1</div>
+                <div class="locked-blocks" id="locked-blocks-1"></div>
+                <div class="grid-blocks" id="grid-1"></div>
+                <div class="correct-answers" id="answers-1"></div>
+            </div>
+            
+            <div class="outer-grid top-right">
+                <div class="grid-title">Grid 2</div>
+                <div class="locked-blocks" id="locked-blocks-2"></div>
+                <div class="grid-blocks" id="grid-2"></div>
+                <div class="correct-answers" id="answers-2"></div>
+            </div>
+            
+            <div class="middle-grid">
+                <div class="grid-title">Middle Grid</div>
+                <div class="middle-answer" id="middle-1">_ _ _ _ _ _</div>
+                <div class="middle-answer" id="middle-2">_ _ _ _ _ _ _</div>
+                <div class="middle-answer" id="middle-3">_ _ _ _ _ _</div>
+                <div class="middle-answer" id="middle-4">_ _ _ _ _ _ _ _</div>
+                <input type="text" class="final-word-input" id="final-word" placeholder="Enter final word...">
+                <button class="btn" onclick="submitFinalWord()">Submit Final Word</button>
+            </div>
+            
+            <div class="outer-grid bottom-left">
+                <div class="grid-title">Grid 3</div>
+                <div class="locked-blocks" id="locked-blocks-3"></div>
+                <div class="grid-blocks" id="grid-3"></div>
+                <div class="correct-answers" id="answers-3"></div>
+            </div>
+            
+            <div class="outer-grid bottom-right">
+                <div class="grid-title">Grid 4</div>
+                <div class="locked-blocks" id="locked-blocks-4"></div>
+                <div class="grid-blocks" id="grid-4"></div>
+                <div class="correct-answers" id="answers-4"></div>
+            </div>
+        </div>
+        
+        <div class="status" id="status">Select 4 blocks to form an answer</div>
+        
+        <div class="controls">
+            <button class="btn" onclick="shuffleGrid()">Shuffle Grid</button>
+            <button class="btn" onclick="startGame()">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        let gameState = {
+            selectedBlocks: [],
+            currentAnswer: "",
+            lockedBlocks: {1: [], 2: [], 3: [], 4: []},
+            revealedMiddle: {1: false, 2: false, 3: false, 4: false},
+            completedGrids: {1: false, 2: false, 3: false, 4: false}
+        };
+
+        const correctAnswers = {
+            1: ["PIN EA PP LE", "BAN ANA ORA NGE", "GRA PE A B C D E F", "HONEY DEW MEL ON"],
+            2: ["A US TR IA", "CAN ADA MEX ICO", "BRA ZIL PER U", "GER MAN Y FRAN CE"],
+            3: ["OR AN GE PU RP LE", "YE LL OW VI OL ET", "RE D BL UE GR EE N", "PI NK BR OW N BL AC K"],
+            4: ["EL EP HA NT GI RA FF", "DO LP HI N PE NG UI N", "LI ON TI GE R BE AR", "WO LF FO X RA BB IT"]
+        };
+
+        const middleAnswers = {
+            1: "PINEAPPLE",
+            2: "BANANA", 
+            3: "ORANGE",
+            4: "GRAPE"
+        };
+
+        const finalWord = "FRUIT";
+
+        function startGame() {
+            gameState = {
+                selectedBlocks: [],
+                currentAnswer: "",
+                lockedBlocks: {1: [], 2: [], 3: [], 4: []},
+                revealedMiddle: {1: false, 2: false, 3: false, 4: false},
+                completedGrids: {1: false, 2: false, 3: false, 4: false}
+            };
+
+            const grids = [1, 2, 3, 4];
+            grids.forEach(gridId => {
+                const grid = document.getElementById(`grid-${gridId}`);
+                const lockedContainer = document.getElementById(`locked-blocks-${gridId}`);
+                const answersContainer = document.getElementById(`answers-${gridId}`);
+                
+                grid.innerHTML = "";
+                lockedContainer.innerHTML = "";
+                answersContainer.innerHTML = "";
+                
+                const blocks = correctAnswers[gridId].flatMap(answer => answer.split(" "));
+                shuffleArray(blocks);
+                
+                blocks.forEach(block => {
+                    const blockElement = document.createElement("div");
+                    blockElement.className = "block";
+                    blockElement.textContent = block;
+                    blockElement.onclick = () => selectBlock(blockElement, gridId);
+                    grid.appendChild(blockElement);
+                });
+            });
+            
+            updateStatus("Select 4 blocks to form an answer");
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function selectBlock(blockElement, gridId) {
+            if (blockElement.classList.contains("locked")) return;
+            
+            if (blockElement.classList.contains("selected")) {
+                blockElement.classList.remove("selected");
+                gameState.selectedBlocks = gameState.selectedBlocks.filter(block => block.element !== blockElement);
+            } else {
+                if (gameState.selectedBlocks.length >= 4) {
+                    updateStatus("You can only select 4 blocks at a time");
+                    return;
+                }
+                blockElement.classList.add("selected");
+                gameState.selectedBlocks.push({
+                    element: blockElement,
+                    gridId: gridId,
+                    text: blockElement.textContent
+                });
+            }
+            
+            updateCurrentAnswer();
+            if (gameState.selectedBlocks.length === 4) {
+                checkAnswer();
+            }
+        }
+
+        function updateCurrentAnswer() {
+            gameState.currentAnswer = gameState.selectedBlocks.map(block => block.text).join(" ");
+        }
+
+        function checkAnswer() {
+            const selectedText = gameState.currentAnswer;
+            let foundAnswer = null;
+            let foundGridId = null;
+            
+            for (const gridId in correctAnswers) {
+                if (correctAnswers[gridId].includes(selectedText)) {
+                    foundAnswer = selectedText;
+                    foundGridId = parseInt(gridId);
+                    break;
+                }
+            }
+            
+            if (foundAnswer) {
+                lockAnswer(foundAnswer, foundGridId);
+            } else {
+                showWrongAnswer();
+            }
+        }
+
+        function lockAnswer(answer, gridId) {
+            gameState.selectedBlocks.forEach(block => {
+                block.element.classList.remove("selected");
+                block.element.classList.add("locked");
+                gameState.lockedBlocks[gridId].push(block.element);
+            });
+            
+            const lockedContainer = document.getElementById(`locked-blocks-${gridId}`);
+            gameState.selectedBlocks.forEach(block => {
+                lockedContainer.appendChild(block.element);
+            });
+            
+            const answersContainer = document.getElementById(`answers-${gridId}`);
+            const answerElement = document.createElement("div");
+            answerElement.textContent = answer;
+            answersContainer.appendChild(answerElement);
+            
+            gameState.selectedBlocks = [];
+            gameState.currentAnswer = "";
+            updateStatus("Correct! Answer locked in place.");
+            checkGridCompletion(gridId);
+        }
+
+        function showWrongAnswer() {
+            gameState.selectedBlocks.forEach(block => {
+                block.element.classList.remove("selected");
+                block.element.classList.add("wrong");
+                setTimeout(() => {
+                    block.element.classList.remove("wrong");
+                }, 500);
+            });
+            
+            gameState.selectedBlocks = [];
+            gameState.currentAnswer = "";
+            updateStatus("Incorrect answer. Try again.");
+        }
+
+        function checkGridCompletion(gridId) {
+            const grid = document.getElementById(`grid-${gridId}`);
+            const remainingBlocks = Array.from(grid.children).filter(block => !block.classList.contains("locked"));
+            
+            if (remainingBlocks.length === 0) {
+                gameState.completedGrids[gridId] = true;
+                const gridContainer = document.querySelector(`.outer-grid:nth-child(${gridId})`);
+                gridContainer.classList.add("grid-complete");
+                revealMiddleBlocks(gridId);
+                updateStatus(`Grid ${gridId} completed! Grid Locked!`);
+            }
+        }
+
+        function revealMiddleBlocks(gridId) {
+            const middleIndex = gridId;
+            const middleElement = document.getElementById(`middle-${middleIndex}`);
+            middleElement.textContent = middleAnswers[middleIndex];
+            middleElement.classList.add("revealed");
+            gameState.revealedMiddle[middleIndex] = true;
+            checkGameCompletion();
+        }
+
+        function checkGameCompletion() {
+            const allRevealed = Object.values(gameState.revealedMiddle).every(revealed => revealed);
+            if (allRevealed) {
+                updateStatus("All middle blocks revealed! Guess the final word.");
+            }
+        }
+
+        function submitFinalWord() {
+            const finalWordInput = document.getElementById("final-word");
+            const guess = finalWordInput.value.toUpperCase();
+            
+            if (guess === finalWord) {
+                updateStatus("Congratulations! You solved GridLock!");
+            } else {
+                updateStatus("Incorrect final word. Try again.");
+            }
+        }
+
+        function shuffleGrid() {
+            const grids = [1, 2, 3, 4];
+            grids.forEach(gridId => {
+                const grid = document.getElementById(`grid-${gridId}`);
+                const blocks = Array.from(grid.children).filter(block => !block.classList.contains("locked"));
+                const blockTexts = blocks.map(block => block.textContent);
+                shuffleArray(blockTexts);
+                blocks.forEach((block, index) => {
+                    block.textContent = blockTexts[index];
+                });
+            });
+            updateStatus("Grid shuffled!");
+        }
+
+        function updateStatus(message) {
+            document.getElementById("status").textContent = message;
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
