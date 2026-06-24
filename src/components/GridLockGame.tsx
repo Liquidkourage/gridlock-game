@@ -258,7 +258,7 @@ export function GridLockGame() {
     <div className="gridlock-game">
       <div className="play-layout">
         {grids.map(grid => (
-          <div key={grid.id} className={`play-cell play-cell-g${grid.id}`}>
+          <div key={grid.id} className="play-cell">
             <OuterGrid
               gridId={grid.id}
               title={`Grid ${grid.id}`}
