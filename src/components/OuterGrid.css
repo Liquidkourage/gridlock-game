@@ -139,33 +139,31 @@
 
 .selection-output.answers {
   display: grid;
-  grid-template-rows: auto 1fr;
-  flex: 0 0 var(--answers-pane-h, 72px);
-  min-height: var(--answers-pane-h, 72px);
+  grid-template-rows: auto auto;
+  flex: 0 0 auto;
 }
 
 .selection-output.answers .selection-header {
-  padding: 3px 8px;
+  padding: 2px 6px;
+  font-size: calc(var(--h3-size, 12px) * 0.95);
 }
 
 .selection-output.answers .selection-body {
-  height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(4, minmax(0, 1fr));
-  gap: calc(var(--cell-gap, 6px) * 0.45);
+  grid-template-rows: repeat(4, var(--answer-line-h, 16px));
+  gap: calc(var(--cell-gap, 6px) * 0.3);
   font-weight: 700;
   letter-spacing: 0.03em;
-  align-content: stretch;
-  align-items: stretch;
-  padding: 4px 6px;
+  padding: 2px 4px 3px;
   overflow: hidden;
 }
 
 .selection-output.answers .locked-line {
-  border-radius: 5px;
-  padding: 2px 4px;
-  min-height: var(--answer-line-h, 22px);
+  border-radius: 4px;
+  padding: 0 3px;
+  height: var(--answer-line-h, 16px);
+  min-height: 0;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -173,7 +171,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--selection-font, 13px) * 0.85);
+  font-size: calc(var(--selection-font, 13px) * 0.78);
   font-weight: 700;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.06);
@@ -188,7 +186,8 @@
 .locked-line-empty {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.06);
-  min-height: var(--answer-line-h, 22px);
+  height: var(--answer-line-h, 16px);
+  min-height: 0;
 }
 
 @keyframes subtle-shake {
