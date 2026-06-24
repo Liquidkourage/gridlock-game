@@ -1,9 +1,13 @@
 .outer-grid {
-  background: var(--bg-panel);
-  border-radius: 12px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
+    linear-gradient(180deg, #232220 0%, #171615 100%);
+  border-radius: 14px;
   padding: var(--card-pad, 12px);
-  border: 1px solid var(--bg-panel-edge);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -45,25 +49,27 @@
 }
 
 .answer-input button {
-  background: var(--accent);
-  color: var(--tile-text);
+  background: linear-gradient(180deg, #4caf50 0%, #3d9140 100%);
+  color: white;
   border: none;
-  padding: 0 10px;
-  border-radius: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
-  font-size: calc(var(--selection-font, 13px) * 0.88);
+  font-size: calc(var(--selection-font, 13px) * 0.9);
   white-space: nowrap;
-  transition: filter 0.1s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: filter 0.12s ease, transform 0.12s ease;
 }
 
 .answer-input button:first-child {
-  background: #3a3a36;
-  color: var(--text-primary);
+  background: linear-gradient(180deg, #4a4a4a 0%, #383838 100%);
+  color: white;
 }
 
 .answer-input button:hover:not(:disabled) {
   filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 .answer-input button:disabled {

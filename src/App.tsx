@@ -23,19 +23,19 @@ function applyLayoutVars() {
 
   // Board-first: readable tiles trump fitting everything above the fold
   const boardByWidth = Math.floor((gameMaxW - gridGap) / 2 - cardPad * 2)
-  const boardByVh = Math.floor(vh * 0.19)
+  const boardByVh = Math.floor(vh * 0.215)
   const outerBoardMax = Math.max(
-    168,
-    Math.min(boardByWidth, boardByVh, 260)
+    172,
+    Math.min(boardByWidth, boardByVh, 285)
   )
 
   const middleBoardMax = Math.max(
-    184,
+    188,
     Math.min(
       Math.floor(outerBoardMax * 1.12),
       Math.floor(gameMaxW - cardPad * 2),
-      Math.floor(vh * 0.22),
-      300
+      Math.floor(vh * 0.245),
+      320
     )
   )
 
