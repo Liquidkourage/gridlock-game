@@ -12,20 +12,26 @@
   display: flex;
   flex-direction: column;
   gap: calc(var(--cell-gap, 6px) * 0.6);
-  width: var(--middle-card-w, 320px);
+  width: var(--middle-card-size, 340px);
+  height: var(--middle-card-size, 340px);
+  aspect-ratio: 1 / 1;
   max-width: 100%;
-  height: auto;
   min-height: 0;
 }
 
 .middle-grid .grid-board-wrap,
 .middle-grid .selection-row,
 .middle-grid > .selection-output.answers {
-  width: var(--middle-board-max, 300px);
+  width: 100%;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
+}
+
+.middle-grid .grid-board-wrap {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .middle-grid h3 {

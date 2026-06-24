@@ -39,6 +39,21 @@ function applyLayoutVars() {
     )
   )
 
+  const cardChromeNoBoard =
+    h3Size +
+    cellGap * 1.2 +
+    selectionRowH +
+    cellGap * 0.75 +
+    answersPaneH
+
+  const outerCardContentH = cardPad * 2 + outerBoardMax + cardChromeNoBoard
+  const outerCardContentW = outerBoardMax + cardPad * 2
+  const outerCardSize = Math.max(outerCardContentW, outerCardContentH)
+
+  const middleCardContentH = cardPad * 2 + middleBoardMax + cardChromeNoBoard + cellGap * 0.6
+  const middleCardContentW = middleBoardMax + cardPad * 2
+  const middleCardSize = Math.max(middleCardContentW, middleCardContentH)
+
   root.setProperty("--app-header-height", `${headerHeight}px`)
   root.setProperty("--app-header-pad", `${Math.round(headerHeight * 0.18)}px`)
   root.setProperty("--app-main-pad", `${mainPad}px`)
@@ -54,8 +69,8 @@ function applyLayoutVars() {
   root.setProperty("--game-max-w", `${gameMaxW}px`)
   root.setProperty("--outer-board-max", `${outerBoardMax}px`)
   root.setProperty("--middle-board-max", `${middleBoardMax}px`)
-  root.setProperty("--outer-card-w", `${outerBoardMax + cardPad * 2}px`)
-  root.setProperty("--middle-card-w", `${middleBoardMax + cardPad * 2}px`)
+  root.setProperty("--outer-card-size", `${outerCardSize}px`)
+  root.setProperty("--middle-card-size", `${middleCardSize}px`)
 }
 
 export default function App() {
