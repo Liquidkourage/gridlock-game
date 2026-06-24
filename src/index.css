@@ -9,13 +9,9 @@
   --tile-text: #1a1a18;
   --tile-border: #d4d4c8;
   --tray-bg: #0f0f0e;
-  --select-bg: #f9df6d;
-  --select-text: #1a1a18;
-  --cat-yellow: #f9df6d;
-  --cat-green: #a0c35a;
-  --cat-blue: #b0c4ef;
-  --cat-purple: #ba81c5;
-  --accent: #a0c35a;
+  --select-bg: #4f8f52;
+  --select-text: #f3fff4;
+  --accent: #4caf50;
 }
 
 * {

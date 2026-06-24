@@ -1,0 +1,68 @@
+/*
+ * Set tier colors — pinned by solve order within each grid (cat-0 = 1st, … cat-3 = 4th).
+ * Default palette: Bronze → Silver → Gold → Platinum
+ */
+
+/* ── Tier 0: Bronze (1st group assembled) ── */
+.grid-block.locked.cat-0,
+.middle-answer.locked.cat-0 {
+  background: linear-gradient(180deg, #b8825a 0%, #966341 52%, #7a4f32 100%);
+  color: #fff5eb;
+  box-shadow:
+    0 2px 0 #4a3520,
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.selection-output.answers .locked-line.cat-0 {
+  background: rgba(184, 130, 90, 0.18);
+  border-color: rgba(184, 130, 90, 0.45);
+  color: #e8b88a;
+}
+
+/* ── Tier 1: Silver (2nd) ── */
+.grid-block.locked.cat-1,
+.middle-answer.locked.cat-1 {
+  background: linear-gradient(180deg, #a8b2bc 0%, #88929c 52%, #6e7780 100%);
+  color: #f8fafc;
+  box-shadow:
+    0 2px 0 #3d4348,
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.selection-output.answers .locked-line.cat-1 {
+  background: rgba(168, 178, 188, 0.18);
+  border-color: rgba(168, 178, 188, 0.45);
+  color: #d0d8e0;
+}
+
+/* ── Tier 2: Gold (3rd) ── */
+.grid-block.locked.cat-2,
+.middle-answer.locked.cat-2 {
+  background: linear-gradient(180deg, #d9b84a 0%, #b89832 52%, #967a22 100%);
+  color: #fffef5;
+  box-shadow:
+    0 2px 0 #5c4a15,
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.selection-output.answers .locked-line.cat-2 {
+  background: rgba(217, 184, 74, 0.18);
+  border-color: rgba(217, 184, 74, 0.45);
+  color: #ecd06a;
+}
+
+/* ── Tier 3: Platinum (4th) ── */
+.grid-block.locked.cat-3,
+.middle-answer.locked.cat-3 {
+  background: linear-gradient(180deg, #c8d4de 0%, #a8b4be 52%, #88929a 100%);
+  color: #1a2030;
+  box-shadow:
+    0 2px 0 #4a5560,
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.selection-output.answers .locked-line.cat-3 {
+  background: rgba(200, 212, 222, 0.16);
+  border-color: rgba(200, 212, 222, 0.42);
+  color: #e2eaf2;
+}
