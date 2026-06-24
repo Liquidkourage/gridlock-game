@@ -14,25 +14,25 @@ function applyLayoutVars() {
   const cellGap = Math.max(5, Math.round(Math.min(vw, vh) * 0.0063))
   const cardPad = Math.max(10, Math.round(vh * 0.01))
   const h1Size = Math.max(26, Math.round(vh * 0.036))
-  const h3Size = Math.max(11, Math.round(vh * 0.012))
   const selectionRowH = Math.max(28, Math.round(vh * 0.032))
-  const selectionFont = Math.max(12, Math.round(selectionRowH * 0.44))
-  const answerLineH = Math.max(11, Math.round(selectionRowH * 0.32))
-  const answersHeaderH = Math.max(10, Math.round(selectionFont * 0.8))
   const answersRowGap = Math.max(2, Math.round(cellGap * 0.2))
-  const answersBodyH = answerLineH * 4 + answersRowGap * 3 + 2
-  const answersPaneH = answersHeaderH + answersBodyH + 2
-
+  const categoryPad = Math.max(4, Math.round(cardPad * 0.4))
   const sectionGap = Math.round(cellGap * 0.6)
   const answersTopGap = Math.round(cellGap * 0.35)
+
+  // Estimate chrome with typical tile font before board size is known
+  const tileFontEst = 13
+  const labelHEst = Math.round(tileFontEst * 1.05)
+  const answerLineHEst = Math.max(12, Math.round(tileFontEst * 1.15))
+  const answersPaneHEst = labelHEst + answerLineHEst * 4 + answersRowGap * 3 + 2
   const cardChromeH =
-    h3Size +
+    labelHEst +
     sectionGap +
     sectionGap +
     selectionRowH +
     sectionGap +
     answersTopGap +
-    answersPaneH
+    answersPaneHEst
 
   const categoryCardWidth = 108
   const gridGap = categoryCardWidth + 16
@@ -50,12 +50,15 @@ function applyLayoutVars() {
     outerCardSize = 2 * cardPad + outerBoardMax + cardChromeH
   }
 
-  const categoryLineH = Math.max(11, Math.round(answerLineH * 0.58))
-  const categoryFont = Math.max(9, Math.round(selectionFont * 0.68))
-  const categoryPad = Math.max(4, Math.round(cardPad * 0.4))
-  const categoryH3 = Math.max(8, Math.round(h3Size * 0.82))
+  // Same formula as grid cells: clamp(10px, 5.2cqi, 16px) on the board
+  const tileFont = Math.max(10, Math.min(Math.round(outerBoardMax * 0.052), 16))
+  const labelH = Math.round(tileFont * 1.05)
+  const answerLineH = Math.max(12, Math.round(tileFont * 1.15))
+  const answersBodyH = answerLineH * 4 + answersRowGap * 3 + 2
+  const answersPaneH = labelH + answersBodyH + 2
+  const categoryLineH = answerLineH
   const categoryBodyH = categoryLineH * 4 + Math.max(2, Math.round(cellGap * 0.25)) * 3
-  const categoryCardHeight = categoryPad * 2 + categoryH3 + categoryBodyH + 6
+  const categoryCardHeight = categoryPad * 2 + labelH + categoryBodyH + 6
 
   root.setProperty("--app-header-height", `${headerHeight}px`)
   root.setProperty("--app-header-pad", `${Math.round(headerHeight * 0.18)}px`)
@@ -64,9 +67,8 @@ function applyLayoutVars() {
   root.setProperty("--cell-gap", `${cellGap}px`)
   root.setProperty("--card-pad", `${cardPad}px`)
   root.setProperty("--h1-size", `${h1Size}px`)
-  root.setProperty("--h3-size", `${h3Size}px`)
+  root.setProperty("--tile-font", `${tileFont}px`)
   root.setProperty("--selection-row-h", `${selectionRowH}px`)
-  root.setProperty("--selection-font", `${selectionFont}px`)
   root.setProperty("--answers-pane-h", `${answersPaneH}px`)
   root.setProperty("--answer-line-h", `${answerLineH}px`)
   root.setProperty("--answers-row-gap", `${answersRowGap}px`)
@@ -77,9 +79,7 @@ function applyLayoutVars() {
   root.setProperty("--category-card-width", `${categoryCardWidth}px`)
   root.setProperty("--category-card-height", `${categoryCardHeight}px`)
   root.setProperty("--category-line-h", `${categoryLineH}px`)
-  root.setProperty("--category-font", `${categoryFont}px`)
   root.setProperty("--category-pad", `${categoryPad}px`)
-  root.setProperty("--category-h3", `${categoryH3}px`)
 }
 
 export default function App() {

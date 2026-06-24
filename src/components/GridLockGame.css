@@ -72,7 +72,7 @@
   border: none;
   border-radius: 6px;
   color: #f5f3ea;
-  font-size: clamp(10px, 5.2cqi, 16px);
+  font-size: var(--tile-font, 13px);
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;

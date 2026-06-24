@@ -18,7 +18,7 @@
 
 .category-reveal h3 {
   margin: 0 0 calc(var(--cell-gap, 6px) * 0.35);
-  font-size: var(--category-h3, 9px);
+  font-size: var(--tile-font, 13px);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -38,7 +38,7 @@
   padding: 1px 4px;
   min-height: var(--category-line-h, 14px);
   text-align: center;
-  font-size: var(--category-font, 10px);
+  font-size: var(--tile-font, 13px);
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -59,7 +59,7 @@
   margin: calc(var(--cell-gap, 6px) * 0.45) 0 0;
   text-align: center;
   color: var(--cat-green, #9be59b);
-  font-size: var(--category-font, 10px);
+  font-size: var(--tile-font, 13px);
   font-weight: 700;
   line-height: 1.2;
 }
