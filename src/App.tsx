@@ -4,68 +4,108 @@ import { GridLockGame } from "./components/GridLockGame"
 import { CreatorPage } from "./pages/CreatorPage"
 import { usePathname } from "./router"
 
-function applyLayoutVars() {
-  const vw = window.innerWidth
-  const vh = window.innerHeight
-  const root = document.documentElement.style
+function slotRowH(font: number) {
+  return font + 8
+}
 
-  const headerHeight = Math.max(52, Math.round(vh * 0.072))
-  const mainPad = Math.max(10, Math.round(Math.min(vw, vh) * 0.012))
-  const cellGap = Math.max(5, Math.round(Math.min(vw, vh) * 0.0063))
-  const cardPad = Math.max(10, Math.round(vh * 0.01))
-  const h1Size = Math.max(26, Math.round(vh * 0.036))
-  const selectionRowH = Math.max(28, Math.round(vh * 0.032))
-  const answersRowGap = Math.max(4, Math.round(cellGap * 0.35))
-  const categoryPad = Math.max(6, Math.round(cardPad * 0.45))
-  const sectionGap = Math.round(cellGap * 0.6)
-  const answersTopGap = Math.round(cellGap * 0.35)
+function labelH(font: number) {
+  return Math.round(font * 1.15) + 3
+}
 
-  const slotRowH = (font: number) => font + 10
-
-  // Estimate chrome with typical tile font before board size is known
-  const tileFontEst = 13
-  const labelHEst = Math.round(tileFontEst * 1.2) + 4
-  const answerLineHEst = slotRowH(tileFontEst)
-  const answersPaneHEst = labelHEst + answerLineHEst * 4 + answersRowGap * 3 + 4
-  const cardChromeH =
-    labelHEst +
+function cardChromeHeight(
+  tileFont: number,
+  selectionRowH: number,
+  answersRowGap: number,
+  cellGap: number
+) {
+  const answerLineH = slotRowH(tileFont)
+  const answersPaneH = labelH(tileFont) + answerLineH * 4 + answersRowGap * 3 + 3
+  const sectionGap = Math.round(cellGap * 0.55)
+  const answersTopGap = Math.round(cellGap * 0.3)
+  return (
+    labelH(tileFont) +
     sectionGap +
     sectionGap +
     selectionRowH +
     sectionGap +
     answersTopGap +
-    answersPaneHEst
+    answersPaneH
+  )
+}
 
-  const categoryCardWidth = 120
-  const gridGapEst = 140
+function categoryCardHeight(
+  tileFont: number,
+  categoryPad: number,
+  answersRowGap: number
+) {
+  const lineH = slotRowH(tileFont)
+  return categoryPad * 2 + labelH(tileFont) + lineH * 4 + answersRowGap * 3 + 4
+}
+
+function applyLayoutVars() {
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+  const root = document.documentElement.style
+
+  const headerHeight = Math.max(40, Math.min(56, Math.round(vh * 0.055)))
+  const mainPad = Math.max(6, Math.round(Math.min(vw, vh) * 0.007))
+  const cellGap = Math.max(4, Math.round(Math.min(vw, vh) * 0.0055))
+  const cardPad = Math.max(8, Math.round(vh * 0.007))
+  const h1Size = Math.max(22, Math.min(30, Math.round(vh * 0.028)))
+  const selectionRowH = Math.max(26, Math.min(32, Math.round(vh * 0.028)))
+  const answersRowGap = Math.max(3, Math.round(cellGap * 0.3))
+  const categoryPad = Math.max(5, Math.round(cardPad * 0.45))
+  const categoryCardWidth = 112
+
+  const playAreaH = vh - headerHeight - mainPad * 2
   const gameMaxW = Math.min(vw - mainPad * 2, 1040)
-  const cardMaxFromW = Math.floor((gameMaxW - gridGapEst) / 2)
-  const cardMaxFromVh = Math.floor(vh * 0.34)
 
-  let outerCardSize = Math.max(268, Math.min(cardMaxFromW, cardMaxFromVh, 360))
-  let outerBoardMax = Math.max(160, outerCardSize - 2 * cardPad - cardChromeH)
-  outerCardSize = 2 * cardPad + outerBoardMax + cardChromeH
+  let gridGap = categoryCardWidth + 14
+  let outerCardSize = Math.max(
+    200,
+    Math.min(
+      Math.floor((playAreaH - gridGap) / 2),
+      Math.floor((gameMaxW - gridGap) / 2),
+      340
+    )
+  )
 
-  if (outerCardSize > cardMaxFromW) {
-    outerCardSize = cardMaxFromW
-    outerBoardMax = Math.max(160, outerCardSize - 2 * cardPad - cardChromeH)
-    outerCardSize = 2 * cardPad + outerBoardMax + cardChromeH
+  for (let pass = 0; pass < 3; pass++) {
+    const tileFontEst = Math.max(10, Math.min(Math.round((outerCardSize - 2 * cardPad - 100) * 0.052), 16))
+    const chromeH = cardChromeHeight(tileFontEst, selectionRowH, answersRowGap, cellGap)
+    let outerBoardMax = Math.max(140, outerCardSize - 2 * cardPad - chromeH)
+    const tileFont = Math.max(10, Math.min(Math.round(outerBoardMax * 0.052), 16))
+    const chromeFinal = cardChromeHeight(tileFont, selectionRowH, answersRowGap, cellGap)
+    outerBoardMax = Math.max(140, outerCardSize - 2 * cardPad - chromeFinal)
+    const catH = categoryCardHeight(tileFont, categoryPad, answersRowGap)
+    gridGap = Math.max(categoryCardWidth + 14, catH + 8)
+    outerCardSize = Math.max(
+      200,
+      Math.min(
+        Math.floor((playAreaH - gridGap) / 2),
+        Math.floor((gameMaxW - gridGap) / 2),
+        340
+      )
+    )
   }
 
-  // Same formula as grid cells: clamp(10px, 5.2cqi, 16px) on the board
+  const tileFontEst = Math.max(10, Math.min(Math.round((outerCardSize - 2 * cardPad - 100) * 0.052), 16))
+  const chromeFinal = cardChromeHeight(tileFontEst, selectionRowH, answersRowGap, cellGap)
+  let outerBoardMax = Math.max(140, outerCardSize - 2 * cardPad - chromeFinal)
   const tileFont = Math.max(10, Math.min(Math.round(outerBoardMax * 0.052), 16))
-  const labelH = Math.round(tileFont * 1.2) + 4
+  const finalChrome = cardChromeHeight(tileFont, selectionRowH, answersRowGap, cellGap)
+  outerBoardMax = Math.max(140, outerCardSize - 2 * cardPad - finalChrome)
+  outerCardSize = 2 * cardPad + outerBoardMax + finalChrome
+
   const answerLineH = slotRowH(tileFont)
-  const answersBodyH = answerLineH * 4 + answersRowGap * 3 + 4
-  const answersPaneH = labelH + answersBodyH
+  const answersPaneH = labelH(tileFont) + answerLineH * 4 + answersRowGap * 3 + 3
   const categoryLineH = answerLineH
-  const categoryRowGap = answersRowGap
-  const categoryBodyH = categoryLineH * 4 + categoryRowGap * 3 + 4
-  const categoryCardHeight = categoryPad * 2 + labelH + categoryBodyH + 4
-  const gridGap = Math.max(categoryCardWidth + 16, categoryCardHeight + 12)
+  const categoryBodyH = categoryLineH * 4 + answersRowGap * 3 + 4
+  const categoryCardHeightFinal = categoryPad * 2 + labelH(tileFont) + categoryBodyH + 4
+  gridGap = Math.max(categoryCardWidth + 14, categoryCardHeightFinal + 8)
 
   root.setProperty("--app-header-height", `${headerHeight}px`)
-  root.setProperty("--app-header-pad", `${Math.round(headerHeight * 0.18)}px`)
+  root.setProperty("--app-header-pad", `${Math.max(6, Math.round(headerHeight * 0.14))}px`)
   root.setProperty("--app-main-pad", `${mainPad}px`)
   root.setProperty("--grid-gap", `${gridGap}px`)
   root.setProperty("--cell-gap", `${cellGap}px`)
@@ -76,14 +116,14 @@ function applyLayoutVars() {
   root.setProperty("--answers-pane-h", `${answersPaneH}px`)
   root.setProperty("--answer-line-h", `${answerLineH}px`)
   root.setProperty("--answers-row-gap", `${answersRowGap}px`)
-  root.setProperty("--card-chrome-h", `${cardChromeH}px`)
+  root.setProperty("--card-chrome-h", `${finalChrome}px`)
   root.setProperty("--game-max-w", `${gameMaxW}px`)
   root.setProperty("--outer-board-max", `${outerBoardMax}px`)
   root.setProperty("--outer-card-size", `${outerCardSize}px`)
   root.setProperty("--category-card-width", `${categoryCardWidth}px`)
-  root.setProperty("--category-card-height", `${categoryCardHeight}px`)
+  root.setProperty("--category-card-height", `${categoryCardHeightFinal}px`)
   root.setProperty("--category-line-h", `${categoryLineH}px`)
-  root.setProperty("--category-row-gap", `${categoryRowGap}px`)
+  root.setProperty("--category-row-gap", `${answersRowGap}px`)
   root.setProperty("--category-pad", `${categoryPad}px`)
 }
 

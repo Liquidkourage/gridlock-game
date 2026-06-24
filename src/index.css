@@ -12,12 +12,20 @@
   --select-bg: #4f8f52;
   --select-text: #f3fff4;
   --accent: #4caf50;
+  --cat-green: #a0c35a;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -29,5 +37,5 @@ body {
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100%;
 }

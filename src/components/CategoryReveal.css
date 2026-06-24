@@ -1,13 +1,14 @@
 .category-reveal {
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
-    linear-gradient(180deg, #232220 0%, #171615 100%);
-  border: 1px solid rgba(76, 175, 80, 0.18);
+    linear-gradient(165deg, rgba(160, 195, 90, 0.06) 0%, transparent 45%),
+    linear-gradient(180deg, #252422 0%, #181715 100%);
+  border: 1px solid rgba(160, 195, 90, 0.22);
   border-radius: 10px;
   padding: var(--category-pad, 6px);
   box-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 10px 28px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(160, 195, 90, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
   width: var(--category-card-width, 108px);
   height: var(--category-card-height, auto);
   max-height: calc(var(--grid-gap, 140px) - 10px);
@@ -17,12 +18,12 @@
 }
 
 .category-reveal h3 {
-  margin: 0 0 calc(var(--cell-gap, 6px) * 0.35);
+  margin: 0 0 calc(var(--cell-gap, 6px) * 0.3);
   font-size: var(--tile-font, 13px);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted, #9a9890);
+  color: rgba(160, 195, 90, 0.75);
   text-align: center;
 }
 
@@ -49,18 +50,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.2);
-  line-height: 1.1;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.18);
 }
 
 .category-slot.revealed {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .category-complete {
-  margin: calc(var(--cell-gap, 6px) * 0.45) 0 0;
+  margin: calc(var(--cell-gap, 6px) * 0.35) 0 0;
   text-align: center;
   color: var(--cat-green, #9be59b);
   font-size: var(--tile-font, 13px);

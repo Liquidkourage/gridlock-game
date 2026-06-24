@@ -2,11 +2,12 @@
   max-width: var(--game-max-w, 1040px);
   margin: 0 auto;
   min-height: 0;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: visible;
-  padding-bottom: var(--grid-gap, 12px);
+  justify-content: center;
+  overflow: hidden;
 }
 
 .play-layout {
