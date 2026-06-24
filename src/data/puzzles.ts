@@ -6,7 +6,8 @@ export interface Puzzle {
   // - answers: precomputed 4 categories × 4 tokens each (legacy), or
   // - baseWords: 4 words to be split into 4 chunks each at runtime
   outer: { name?: string; answers?: string[][]; baseWords?: string[] }[]
-  final: { labels: string[]; finalOrder?: number[]; finalWord?: string }
+  /** Optional category labels (used when outer[].name is missing) */
+  final?: { labels?: string[] }
 }
 
 export async function loadPuzzle(puzzleId: string): Promise<Puzzle> {
@@ -69,16 +70,15 @@ function normalizePuzzle(p: Puzzle): Puzzle {
     return { name, answers: [] as string[][] }
   })
 
-  const final = {
-    labels: (p.final?.labels || []).map(normalizeToken),
-    finalOrder: p.final?.finalOrder ? [...p.final.finalOrder] : undefined,
-  }
+  const final = p.final?.labels?.length
+    ? { labels: p.final.labels.map(normalizeToken) }
+    : undefined
 
   return {
     puzzleId: p.puzzleId,
     date: p.date,
     seed: p.seed,
     outer,
-    final,
+    ...(final ? { final } : {}),
   }
 }

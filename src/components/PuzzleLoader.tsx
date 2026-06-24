@@ -9,7 +9,7 @@ export function PuzzleLoader({ onLoad }: Props) {
   const [seed, setSeed] = useState<string>(new Date().toISOString().slice(0, 10))
   // Four input boxes (one per outer grid). Each box should contain 4 lines; each line has 1 base word.
   const [gridBoxes, setGridBoxes] = useState<string[]>(["", "", "", ""]) 
-  const [finalLabels, setFinalLabels] = useState<string[]>(["", "", "", ""]) // 4 final grid answers
+  const [categoryNames, setCategoryNames] = useState<string[]>(["", "", "", ""])
   const [error, setError] = useState<string | null>(null)
 
   const DRAFT_KEY = "puzzle_builder_draft_v4"
@@ -25,7 +25,8 @@ export function PuzzleLoader({ onLoad }: Props) {
         if (typeof d?.simpleId === "string") setSimpleId(d.simpleId)
         if (typeof d?.seed === "string") setSeed(d.seed)
         if (Array.isArray(d?.gridBoxes) && d.gridBoxes.length === 4) setGridBoxes(d.gridBoxes)
-        if (Array.isArray(d?.finalLabels) && d.finalLabels.length === 4) setFinalLabels(d.finalLabels)
+        if (Array.isArray(d?.categoryNames) && d.categoryNames.length === 4) setCategoryNames(d.categoryNames)
+        else if (Array.isArray(d?.finalLabels) && d.finalLabels.length === 4) setCategoryNames(d.finalLabels)
         return
       }
       // v3 fallback
@@ -35,7 +36,7 @@ export function PuzzleLoader({ onLoad }: Props) {
         if (typeof d?.simpleId === "string") setSimpleId(d.simpleId)
         if (typeof d?.seed === "string") setSeed(d.seed)
         if (Array.isArray(d?.categoryBoxes) && d.categoryBoxes.length === 4) setGridBoxes(d.categoryBoxes)
-        if (Array.isArray(d?.finalLabels) && d.finalLabels.length > 0) setFinalLabels([0,1,2,3].map(i => d.finalLabels[i] || ""))
+        if (Array.isArray(d?.finalLabels) && d.finalLabels.length > 0) setCategoryNames([0,1,2,3].map(i => d.finalLabels[i] || ""))
         return
       }
       // v2 fallback
@@ -47,7 +48,7 @@ export function PuzzleLoader({ onLoad }: Props) {
         if (Array.isArray(d?.categoryBoxes) && d.categoryBoxes.length === 4) setGridBoxes(d.categoryBoxes)
         if (typeof d?.finalBox === "string") {
           const tokens = parseTokens(d.finalBox)
-          setFinalLabels([0,1,2,3].map(i => tokens[i] || ""))
+          setCategoryNames([0, 1, 2, 3].map(i => tokens[i] || ""))
         }
         return
       }
@@ -57,7 +58,7 @@ export function PuzzleLoader({ onLoad }: Props) {
         if (typeof d?.simpleId === "string") setSimpleId(d.simpleId)
         if (typeof d?.seed === "string") setSeed(d.seed)
         if (Array.isArray(d?.categoryBoxes) && d.categoryBoxes.length === 4) setGridBoxes(d.categoryBoxes)
-        if (Array.isArray(d?.finalLabels) && d.finalLabels.length > 0) setFinalLabels([0,1,2,3].map(i => d.finalLabels[i] || ""))
+        if (Array.isArray(d?.finalLabels) && d.finalLabels.length > 0) setCategoryNames([0,1,2,3].map(i => d.finalLabels[i] || ""))
       }
     } catch {}
   }, [])
@@ -66,12 +67,12 @@ export function PuzzleLoader({ onLoad }: Props) {
   useEffect(() => {
     const id = window.setTimeout(() => {
       try {
-        const payload = { simpleId, seed, gridBoxes, finalLabels }
+        const payload = { simpleId, seed, gridBoxes, categoryNames }
         localStorage.setItem(DRAFT_KEY, JSON.stringify(payload))
       } catch {}
     }, 300)
     return () => window.clearTimeout(id)
-  }, [simpleId, seed, gridBoxes, finalLabels])
+  }, [simpleId, seed, gridBoxes, categoryNames])
 
   const buildAndLoad = () => {
     setError(null)
@@ -83,15 +84,14 @@ export function PuzzleLoader({ onLoad }: Props) {
         return { name: `Grid ${idx + 1}`, baseWords: lines }
       })
 
-      const labels = finalLabels.map((l, i) => (l || ``).trim() || `Answer ${i + 1}`)
-      if (labels.length !== 4) throw new Error("Final Grid Answers: need 4 answers")
+      const names = categoryNames.map((l, i) => (l || "").trim() || `Category ${i + 1}`)
+      if (names.length !== 4) throw new Error("Category names: need 4 categories")
 
       const puzzle = {
         puzzleId: (simpleId || "custom").trim(),
         date: new Date().toISOString().slice(0, 10),
         seed: seed.trim() || new Date().toISOString().slice(0, 10),
-        outer,
-        final: { labels }
+        outer: outer.map((g, i) => ({ ...g, name: names[i] })),
       }
       sessionStorage.setItem("puzzle:_paste", JSON.stringify(puzzle))
       onLoad("_paste")
@@ -122,10 +122,10 @@ export function PuzzleLoader({ onLoad }: Props) {
         ))}
       </div>
 
-      <div style={{ color: "#bbb", fontWeight: 600 }}>Final Grid Answers (4)</div>
+      <div style={{ color: "#bbb", fontWeight: 600 }}>Category Names (4)</div>
       <div style={{ display: "grid", gap: 6, gridTemplateColumns: "repeat(4, minmax(0,1fr))" }}>
-        {finalLabels.map((l, i) => (
-          <input key={i} placeholder={`Answer ${i + 1}`} value={l} onChange={e => setFinalLabels(prev => prev.map((x, idx) => (idx === i ? e.target.value : x)))} />
+        {categoryNames.map((l, i) => (
+          <input key={i} placeholder={`Category ${i + 1}`} value={l} onChange={e => setCategoryNames(prev => prev.map((x, idx) => (idx === i ? e.target.value : x)))} />
         ))}
       </div>
 
