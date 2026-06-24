@@ -97,22 +97,18 @@ export function OuterGrid({
       <div className="selection-output answers">
         <div className="selection-header">Answers</div>
         <div className="selection-body">
-          {lockedAnswers.length > 0 ? (
-            [0, 1, 2, 3].map(tier => {
-              const answer = lockedAnswers.find(
-                a => tierIndex(a.categorySetIndex, discoveredCategories) === tier
-              )
-              return answer ? (
-                <div key={tier} className={`locked-line cat-${tier}`}>
-                  {answer.text.split(" ").join("")}
-                </div>
-              ) : (
-                <div key={tier} className="locked-line locked-line-empty" aria-hidden="true" />
-              )
-            })
-          ) : (
-            "—"
-          )}
+          {[0, 1, 2, 3].map(tier => {
+            const answer = lockedAnswers.find(
+              a => tierIndex(a.categorySetIndex, discoveredCategories) === tier
+            )
+            return answer ? (
+              <div key={tier} className={`locked-line cat-${tier}`}>
+                {answer.text.split(" ").join("")}
+              </div>
+            ) : (
+              <div key={tier} className="locked-line locked-line-empty" aria-hidden="true" />
+            )
+          })}
         </div>
       </div>
     </section>

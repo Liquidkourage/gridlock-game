@@ -39,8 +39,9 @@ function applyLayoutVars() {
     cellGap * 0.75 +
     answersPaneH
 
+  const outerCardContentH = cardPad * 2 + outerBoardMax + cardChromeNoBoard
   const outerCardContentW = outerBoardMax + cardPad * 2
-  const outerCardSize = outerCardContentW
+  const outerCardSize = Math.max(outerCardContentW, outerCardContentH)
 
   const categoryCardWidth = Math.max(96, Math.min(Math.round(outerCardSize * 0.28), 128))
   // Gap between the four grid cards — must fit Categories at the intersection

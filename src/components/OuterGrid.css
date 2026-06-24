@@ -13,7 +13,8 @@
   align-items: stretch;
   overflow: hidden;
   width: var(--outer-card-size, 320px);
-  height: auto;
+  height: var(--outer-card-size, 320px);
+  aspect-ratio: 1 / 1;
   max-width: 100%;
   justify-self: center;
   box-sizing: border-box;
@@ -30,7 +31,7 @@
 }
 
 .outer-grid .grid-board-wrap {
-  flex: 0 0 auto;
+  flex: 1 1 0;
   min-height: 0;
   margin-bottom: 0;
 }
@@ -138,8 +139,9 @@
 
 .selection-output.answers {
   display: grid;
-  grid-template-rows: auto auto;
-  flex: 0 0 auto;
+  grid-template-rows: auto 1fr;
+  flex: 0 0 var(--answers-pane-h, 72px);
+  min-height: var(--answers-pane-h, 72px);
   margin-top: calc(var(--cell-gap, 6px) * 0.35);
 }
 
@@ -158,16 +160,9 @@
   letter-spacing: 0.03em;
   padding: 1px 3px 2px;
   overflow: hidden;
-  height: auto;
+  height: 100%;
   min-height: 0;
-  align-items: center;
-}
-
-.selection-output.answers .selection-body:not(:has(.locked-line)) {
-  grid-template-rows: var(--answer-line-h, 12px);
-  padding: 2px 4px;
-  font-size: calc(var(--selection-font, 13px) * 0.75);
-  color: var(--text-muted);
+  align-content: start;
 }
 
 .selection-output.answers .locked-line {
