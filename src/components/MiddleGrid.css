@@ -97,11 +97,6 @@
   text-transform: uppercase;
 }
 
-.answer-text .hl {
-  color: #c8960a;
-  font-weight: 800;
-}
-
 .middle-grid .selection-row {
   flex: 0 0 var(--selection-row-h, 36px);
 }

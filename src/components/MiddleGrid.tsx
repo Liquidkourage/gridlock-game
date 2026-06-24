@@ -8,14 +8,12 @@ interface Props {
   onShuffle: () => void
   onSwapTiles: (fromDataIdx: number, toDataIdx: number) => void
   labels: string[]
-  highlights: number[][]
   blocks: { id: string; text: string; gridIndex: number; position: number }[]
   onToggleSelect: (block: { id: string; text: string; gridIndex: number; position: number }) => void
   onClearSelection: () => void
   selected: { id: string; text: string; gridIndex: number; position: number }[]
   lockedAnswers: { text: string; category: string; blocks: { id: string }[] }[]
   gameComplete: boolean
-  finalWord: string
 }
 
 export function MiddleGrid({
@@ -24,14 +22,12 @@ export function MiddleGrid({
   onShuffle,
   onSwapTiles,
   labels,
-  highlights,
   blocks,
   onToggleSelect,
   onClearSelection,
   selected,
   lockedAnswers,
   gameComplete,
-  finalWord,
 }: Props) {
   const handleSwap = useCallback(
     (fromKey: string, toKey: string) => onSwapTiles(Number(fromKey), Number(toKey)),
@@ -78,7 +74,6 @@ export function MiddleGrid({
     const labelIdx = dataIdx < labels.length ? dataIdx : -1
     const isRevealed = revealed[dataIdx]
     const text = labelIdx >= 0 ? labels[labelIdx] : ""
-    const hl = labelIdx >= 0 ? (highlights[labelIdx] || []) : []
     const block = blocks[dataIdx]
     const blockId = block?.id || ""
     const isSelected = block ? selected.some(b => b.id === blockId) : false
@@ -86,7 +81,7 @@ export function MiddleGrid({
     const catIdx = block && isLocked
       ? lockedAnswers.findIndex(a => a.blocks.some(x => x.id === blockId))
       : -1
-    return { i: dataIdx, text, hl, revealed: isRevealed, block, isSelected, isLocked, catIdx }
+    return { i: dataIdx, text, revealed: isRevealed, block, isSelected, isLocked, catIdx }
   })
 
   return (
@@ -112,13 +107,7 @@ export function MiddleGrid({
                 {...drag}
               >
                 <div className="answer-text">
-                  {cell.revealed ? (
-                    cell.text.split("").map((ch, idx) => (
-                      <span key={idx} className={cell.hl.includes(idx) ? "hl" : undefined}>{ch}</span>
-                    ))
-                  ) : (
-                    "???"
-                  )}
+                  {cell.revealed ? cell.text : "???"}
                 </div>
               </div>
             )
@@ -146,7 +135,7 @@ export function MiddleGrid({
       </div>
 
       {gameComplete && (
-        <div className="game-complete-message">All final answers revealed! Target: {finalWord}</div>
+        <div className="game-complete-message">Puzzle complete!</div>
       )}
     </section>
   )

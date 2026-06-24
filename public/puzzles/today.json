@@ -9,8 +9,7 @@
     { "name": "Set 4", "answers": [["M1","M2","M3","M4"],["N1","N2","N3","N4"],["O1","O2","O3","O4"],["P1","P2","P3","P4"]] }
   ],
   "final": {
-    "labels": ["PINEAPPLE","BANANA","ORANGE","GRAPE"],
-    "finalWord": "FRUIT"
+    "labels": ["PINEAPPLE","BANANA","ORANGE","GRAPE"]
   }
 }
 

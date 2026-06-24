@@ -6,7 +6,7 @@ export interface Puzzle {
   // - answers: precomputed 4 categories × 4 tokens each (legacy), or
   // - baseWords: 4 words to be split into 4 chunks each at runtime
   outer: { name?: string; answers?: string[][]; baseWords?: string[] }[]
-  final: { labels: string[]; finalWord: string; finalOrder?: number[] }
+  final: { labels: string[]; finalOrder?: number[]; finalWord?: string }
 }
 
 export async function loadPuzzle(puzzleId: string): Promise<Puzzle> {
@@ -71,7 +71,6 @@ function normalizePuzzle(p: Puzzle): Puzzle {
 
   const final = {
     labels: (p.final?.labels || []).map(normalizeToken),
-    finalWord: normalizeToken(p.final?.finalWord || ""),
     finalOrder: p.final?.finalOrder ? [...p.final.finalOrder] : undefined,
   }
 

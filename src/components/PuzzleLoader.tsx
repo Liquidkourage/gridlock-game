@@ -91,7 +91,7 @@ export function PuzzleLoader({ onLoad }: Props) {
         date: new Date().toISOString().slice(0, 10),
         seed: seed.trim() || new Date().toISOString().slice(0, 10),
         outer,
-        final: { labels, finalWord: "" }
+        final: { labels }
       }
       sessionStorage.setItem("puzzle:_paste", JSON.stringify(puzzle))
       onLoad("_paste")

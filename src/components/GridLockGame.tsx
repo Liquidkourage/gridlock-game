@@ -35,8 +35,6 @@ export function GridLockGame() {
     lockedAnswers: [],
     revealedMiddleBlocks: Array(16).fill(false),
     gameComplete: false,
-    finalWord: "",
-    currentGuess: ""
   })
   const [activeGridId, setActiveGridId] = useState<number | null>(null)
   const [wrongFeedback, setWrongFeedback] = useState<boolean[]>([false, false, false, false])
@@ -47,7 +45,7 @@ export function GridLockGame() {
     loadPuzzle(id)
       .then(data => {
         setPuzzle(data)
-        setGameState({ selectedBlocks: [], lockedAnswers: [], revealedMiddleBlocks: Array(16).fill(false), gameComplete: false, finalWord: "", currentGuess: "" })
+        setGameState({ selectedBlocks: [], lockedAnswers: [], revealedMiddleBlocks: Array(16).fill(false), gameComplete: false })
         const url = new URL(window.location.href)
         url.searchParams.set("p", id)
         window.history.replaceState({}, "", url.toString())
@@ -207,26 +205,6 @@ export function GridLockGame() {
     for (let i = 0; i < 4; i++) cats.push(finalLabels16.slice(i * 4, i * 4 + 4))
     return cats
   }, [finalLabels16])
-
-  // Highlights per final chunk index so that concatenated highlighted characters spell finalWord
-  const finalHighlights16: number[][] = useMemo(() => {
-    if (!puzzle) return Array(16).fill([])
-    const target = (puzzle.final.finalWord || "").trim()
-    if (!target) return Array(16).fill([])
-    const highlights: number[][] = Array.from({ length: 16 }, () => [])
-    let tPos = 0
-    for (let i = 0; i < 16; i++) {
-      const chunk = finalLabels16[i] || ""
-      if (tPos >= target.length) break
-      const wanted = target[tPos]
-      const idx = chunk.indexOf(wanted)
-      if (idx >= 0) {
-        highlights[i] = [idx]
-        tPos++
-      }
-    }
-    return highlights
-  }, [puzzle, finalLabels16])
 
   const shuffleGrid = (gridId: number) => {
     if (!puzzle) return
@@ -411,15 +389,11 @@ export function GridLockGame() {
           onShuffle={shuffleFinal}
           onSwapTiles={swapFinalGridTiles}
           labels={finalLabels16}
-          highlights={finalHighlights16}
           blocks={finalBlocks}
           onToggleSelect={onToggleSelect}
           onClearSelection={() => setGameState(prev => ({ ...prev, selectedBlocks: prev.selectedBlocks.filter(b => b.gridIndex !== 5) }))}
           selected={gameState.selectedBlocks.filter(b => b.gridIndex === 5)}
           lockedAnswers={gameState.lockedAnswers.filter(a => a.category === `Grid Final`)}
-          finalWord={puzzle.final.finalWord}
-          currentGuess={gameState.currentGuess}
-          onGuess={(guess: string) => setGameState(prev => ({ ...prev, selectedBlocks: [], currentGuess: guess, finalWord: guess.toUpperCase() }))}
           gameComplete={gameState.gameComplete}
         />
       </div>
