@@ -42,6 +42,12 @@ function applyLayoutVars() {
   const outerCardContentW = outerBoardMax + cardPad * 2
   const outerCardSize = Math.max(outerCardContentW, outerCardContentH)
 
+  const categoryCardWidth = Math.max(100, Math.min(Math.round(outerCardSize * 0.3), 140))
+  const categoryLineH = Math.max(12, Math.round(answerLineH * 0.58))
+  const categoryFont = Math.max(9, Math.round(selectionFont * 0.68))
+  const categoryPad = Math.max(4, Math.round(cardPad * 0.4))
+  const categoryH3 = Math.max(8, Math.round(h3Size * 0.82))
+
   root.setProperty("--app-header-height", `${headerHeight}px`)
   root.setProperty("--app-header-pad", `${Math.round(headerHeight * 0.18)}px`)
   root.setProperty("--app-main-pad", `${mainPad}px`)
@@ -57,6 +63,11 @@ function applyLayoutVars() {
   root.setProperty("--game-max-w", `${gameMaxW}px`)
   root.setProperty("--outer-board-max", `${outerBoardMax}px`)
   root.setProperty("--outer-card-size", `${outerCardSize}px`)
+  root.setProperty("--category-card-width", `${categoryCardWidth}px`)
+  root.setProperty("--category-line-h", `${categoryLineH}px`)
+  root.setProperty("--category-font", `${categoryFont}px`)
+  root.setProperty("--category-pad", `${categoryPad}px`)
+  root.setProperty("--category-h3", `${categoryH3}px`)
 }
 
 export default function App() {
