@@ -35,6 +35,8 @@ export function GridLockGame() {
     lockedAnswers: [],
     revealedMiddleBlocks: Array(16).fill(false),
     gameComplete: false,
+    discoveredOuterCategories: [],
+    discoveredFinalCategories: [],
   })
   const [activeGridId, setActiveGridId] = useState<number | null>(null)
   const [wrongFeedback, setWrongFeedback] = useState<boolean[]>([false, false, false, false])
@@ -45,7 +47,14 @@ export function GridLockGame() {
     loadPuzzle(id)
       .then(data => {
         setPuzzle(data)
-        setGameState({ selectedBlocks: [], lockedAnswers: [], revealedMiddleBlocks: Array(16).fill(false), gameComplete: false })
+        setGameState({
+          selectedBlocks: [],
+          lockedAnswers: [],
+          revealedMiddleBlocks: Array(16).fill(false),
+          gameComplete: false,
+          discoveredOuterCategories: [],
+          discoveredFinalCategories: [],
+        })
         const url = new URL(window.location.href)
         url.searchParams.set("p", id)
         window.history.replaceState({}, "", url.toString())
@@ -293,28 +302,35 @@ export function GridLockGame() {
         return { ...prev, selectedBlocks: [] }
       }
 
-      const setIndex = catList.findIndex(cat => arraysEqualUnordered(selectedTexts, cat))
-      if (setIndex < 0) return prev
+      const categorySetIndex = catList.findIndex(cat => arraysEqualUnordered(selectedTexts, cat))
+      if (categorySetIndex < 0) return prev
 
       const categoryLabel = gridId === 5 ? `Grid Final` : `Grid ${gridId}`
       const alreadyLocked = prev.lockedAnswers.some(
-        a => a.category === categoryLabel && a.setIndex === setIndex
+        a => a.category === categoryLabel && a.categorySetIndex === categorySetIndex
       )
       if (alreadyLocked) return { ...prev, selectedBlocks: [] }
+
+      const isOuter = gridId >= 1 && gridId <= 4
+      const discoveredKey = isOuter ? "discoveredOuterCategories" : "discoveredFinalCategories"
+      const discovered = [...prev[discoveredKey]]
+      if (!discovered.includes(categorySetIndex)) {
+        discovered.push(categorySetIndex)
+      }
 
       const newAnswer: Answer = {
         text: (matchedCategory as string[]).join(" "),
         category: categoryLabel,
         blocks: prev.selectedBlocks,
-        setIndex,
+        categorySetIndex,
       }
       const updatedLocked = [...prev.lockedAnswers, newAnswer]
 
       // Reveal behavior
       const revealed = [...prev.revealedMiddleBlocks]
-      if (gridId >= 1 && gridId <= 4) {
+      if (isOuter) {
         const labelPerm = labelPermutationByGrid[gridId] || [0, 1, 2, 3]
-        const labelIdx = labelPerm[setIndex]
+        const labelIdx = labelPerm[categorySetIndex]
         // For that label, choose the chunk index assigned to this grid
         const chunkMap = chunkIndexByLabelGrid[labelIdx] || [0,1,2,3]
         const chunkIdx = chunkMap[(gridId - 1) % 4]
@@ -328,7 +344,14 @@ export function GridLockGame() {
       setSuccessFeedback(flags => { const n = [...flags]; n[gridId - 1] = true; return n })
       setTimeout(() => { setSuccessFeedback(flags => { const n = [...flags]; n[gridId - 1] = false; return n }) }, 700)
       setActiveGridId(null)
-      return { ...prev, selectedBlocks: [], lockedAnswers: updatedLocked, revealedMiddleBlocks: revealed, gameComplete: allRevealed }
+      return {
+        ...prev,
+        selectedBlocks: [],
+        lockedAnswers: updatedLocked,
+        revealedMiddleBlocks: revealed,
+        gameComplete: allRevealed,
+        [discoveredKey]: discovered,
+      }
     })
   }
 
@@ -380,6 +403,7 @@ export function GridLockGame() {
             blocks={grid.blocks}
             selected={gameState.selectedBlocks}
             lockedAnswers={gameState.lockedAnswers.filter(a => a.category === `Grid ${grid.id}`)}
+            discoveredCategories={gameState.discoveredOuterCategories}
             onToggleSelect={onToggleSelect}
             onSubmitSelection={() => onSubmitSelection(grid.id)}
             onClearSelection={() => onClearSelection(grid.id)}
@@ -404,6 +428,7 @@ export function GridLockGame() {
           onClearSelection={() => setGameState(prev => ({ ...prev, selectedBlocks: prev.selectedBlocks.filter(b => b.gridIndex !== 5) }))}
           selected={gameState.selectedBlocks.filter(b => b.gridIndex === 5)}
           lockedAnswers={gameState.lockedAnswers.filter(a => a.category === `Grid Final`)}
+          discoveredCategories={gameState.discoveredFinalCategories}
           gameComplete={gameState.gameComplete}
         />
       </div>

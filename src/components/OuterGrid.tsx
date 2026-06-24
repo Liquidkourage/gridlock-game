@@ -9,6 +9,8 @@ interface Props {
   blocks: Block[]
   selected: Block[]
   lockedAnswers: Answer[]
+  /** Global order in which category sets were first solved (outer grids) */
+  discoveredCategories: number[]
   onToggleSelect: (block: Block) => void
   onClearSelection: () => void
   onShuffle: () => void
@@ -18,9 +20,15 @@ interface Props {
   successFeedback?: boolean
 }
 
-function setIndexForBlock(lockedAnswers: Answer[], blockId: string): number {
+function tierIndex(categorySetIndex: number, discovered: number[]): number {
+  const t = discovered.indexOf(categorySetIndex)
+  return t >= 0 ? t : Number.POSITIVE_INFINITY
+}
+
+function tierForBlock(lockedAnswers: Answer[], blockId: string, discovered: number[]): number {
   const answer = lockedAnswers.find(a => a.blocks.some(x => x.id === blockId))
-  return answer?.setIndex ?? -1
+  if (!answer) return -1
+  return tierIndex(answer.categorySetIndex, discovered)
 }
 
 export function OuterGrid({
@@ -29,6 +37,7 @@ export function OuterGrid({
   blocks,
   selected,
   lockedAnswers,
+  discoveredCategories,
   onToggleSelect,
   onClearSelection,
   onShuffle,
@@ -47,22 +56,23 @@ export function OuterGrid({
   )
   const { bindTile, tileClass, suppressClickRef } = useTileDragSwap(handleSwap)
 
-  // Locked groups snap to their set row (set 0 → row 1, set 1 → row 2, …)
+  // Locked groups snap to tier row (bronze=row 1, silver=row 2, …)
   const orderedBlocks = React.useMemo(() => {
-    const blockToSetIndex = new Map<string, number>()
+    const blockToTier = new Map<string, number>()
     const blockToWithinGroup = new Map<string, number>()
     const indexById = new Map<string, number>()
     blocks.forEach((b, idx) => indexById.set(b.id, idx))
 
     lockedAnswers.forEach(ans => {
+      const tier = tierIndex(ans.categorySetIndex, discoveredCategories)
       ans.blocks.forEach((b, i) => {
-        blockToSetIndex.set(b.id, ans.setIndex)
+        blockToTier.set(b.id, tier)
         blockToWithinGroup.set(b.id, i)
       })
     })
     return [...blocks].sort((a, b) => {
-      const ga = blockToSetIndex.has(a.id) ? blockToSetIndex.get(a.id)! : Number.POSITIVE_INFINITY
-      const gb = blockToSetIndex.has(b.id) ? blockToSetIndex.get(b.id)! : Number.POSITIVE_INFINITY
+      const ga = blockToTier.has(a.id) ? blockToTier.get(a.id)! : Number.POSITIVE_INFINITY
+      const gb = blockToTier.has(b.id) ? blockToTier.get(b.id)! : Number.POSITIVE_INFINITY
       if (ga !== gb) return ga - gb
       if (ga !== Number.POSITIVE_INFINITY) {
         const ia = blockToWithinGroup.get(a.id) ?? 0
@@ -71,7 +81,7 @@ export function OuterGrid({
       }
       return (indexById.get(a.id) ?? 0) - (indexById.get(b.id) ?? 0)
     })
-  }, [blocks, lockedAnswers])
+  }, [blocks, lockedAnswers, discoveredCategories])
 
   return (
     <section className={`outer-grid${wrongFeedback ? " wrong" : ""}${successFeedback ? " success" : ""}`}>
@@ -80,13 +90,13 @@ export function OuterGrid({
         <div className="grid-blocks">
           {orderedBlocks.map(block => {
             const locked = isLocked(block)
-            const setIdx = setIndexForBlock(lockedAnswers, block.id)
+            const tier = tierForBlock(lockedAnswers, block.id, discoveredCategories)
             const dragDisabled = locked || Boolean(disableInteraction)
             const drag = bindTile(block.id, dragDisabled)
             return (
               <button
                 key={block.id}
-                className={`grid-block${isSelected(block) ? " selected" : ""}${locked && setIdx >= 0 ? ` locked cat-${setIdx}` : locked ? " locked" : ""}${tileClass(block.id, dragDisabled)}`}
+                className={`grid-block${isSelected(block) ? " selected" : ""}${locked && tier >= 0 ? ` locked cat-${tier}` : locked ? " locked" : ""}${tileClass(block.id, dragDisabled)}`}
                 onClick={() => {
                   if (suppressClickRef.current) {
                     suppressClickRef.current = false
@@ -120,14 +130,16 @@ export function OuterGrid({
         <div className="selection-header">Answers</div>
         <div className="selection-body">
           {lockedAnswers.length > 0 ? (
-            [0, 1, 2, 3].map(setIdx => {
-              const answer = lockedAnswers.find(a => a.setIndex === setIdx)
+            [0, 1, 2, 3].map(tier => {
+              const answer = lockedAnswers.find(
+                a => tierIndex(a.categorySetIndex, discoveredCategories) === tier
+              )
               return answer ? (
-                <div key={setIdx} className={`locked-line cat-${setIdx}`}>
+                <div key={tier} className={`locked-line cat-${tier}`}>
                   {answer.text.split(" ").join("")}
                 </div>
               ) : (
-                <div key={setIdx} className="locked-line locked-line-empty" aria-hidden="true" />
+                <div key={tier} className="locked-line locked-line-empty" aria-hidden="true" />
               )
             })
           ) : (

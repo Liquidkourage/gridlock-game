@@ -14,7 +14,13 @@ interface Props {
   onClearSelection: () => void
   selected: { id: string; text: string; gridIndex: number; position: number }[]
   lockedAnswers: Answer[]
+  discoveredCategories: number[]
   gameComplete: boolean
+}
+
+function tierIndex(categorySetIndex: number, discovered: number[]): number {
+  const t = discovered.indexOf(categorySetIndex)
+  return t >= 0 ? t : Number.POSITIVE_INFINITY
 }
 
 export function MiddleGrid({
@@ -28,6 +34,7 @@ export function MiddleGrid({
   onClearSelection,
   selected,
   lockedAnswers,
+  discoveredCategories,
   gameComplete,
 }: Props) {
   const handleSwap = useCallback(
@@ -38,7 +45,7 @@ export function MiddleGrid({
 
   const totalCells = 16
   const orderedDataIdxs = (() => {
-    const blockToSetIndex = new Map<string, number>()
+    const blockToTier = new Map<string, number>()
     const blockToWithinGroup = new Map<string, number>()
     const indexById = new Map<string, number>()
     for (let disp = 0; disp < totalCells; disp++) {
@@ -47,8 +54,9 @@ export function MiddleGrid({
       if (id) indexById.set(id, disp)
     }
     lockedAnswers.forEach(ans => {
+      const tier = tierIndex(ans.categorySetIndex, discoveredCategories)
       ans.blocks.forEach((b, i) => {
-        blockToSetIndex.set(b.id, ans.setIndex)
+        blockToTier.set(b.id, tier)
         blockToWithinGroup.set(b.id, i)
       })
     })
@@ -56,8 +64,8 @@ export function MiddleGrid({
     allIdxs.sort((a, b) => {
       const ida = blocks[a]?.id || ""
       const idb = blocks[b]?.id || ""
-      const ga = blockToSetIndex.has(ida) ? blockToSetIndex.get(ida)! : Number.POSITIVE_INFINITY
-      const gb = blockToSetIndex.has(idb) ? blockToSetIndex.get(idb)! : Number.POSITIVE_INFINITY
+      const ga = blockToTier.has(ida) ? blockToTier.get(ida)! : Number.POSITIVE_INFINITY
+      const gb = blockToTier.has(idb) ? blockToTier.get(idb)! : Number.POSITIVE_INFINITY
       if (ga !== gb) return ga - gb
       if (ga !== Number.POSITIVE_INFINITY) {
         const ia = blockToWithinGroup.get(ida) ?? 0
@@ -80,8 +88,10 @@ export function MiddleGrid({
     const isSelected = block ? selected.some(b => b.id === blockId) : false
     const lockedAnswer = block ? lockedAnswers.find(a => a.blocks.some(x => x.id === blockId)) : undefined
     const isLocked = Boolean(lockedAnswer)
-    const setIdx = lockedAnswer?.setIndex ?? -1
-    return { i: dataIdx, text, revealed: isRevealed, block, isSelected, isLocked, setIdx }
+    const tier = lockedAnswer
+      ? tierIndex(lockedAnswer.categorySetIndex, discoveredCategories)
+      : -1
+    return { i: dataIdx, text, revealed: isRevealed, block, isSelected, isLocked, tier }
   })
 
   return (
@@ -96,7 +106,7 @@ export function MiddleGrid({
             return (
               <div
                 key={key}
-                className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""}${cell.isLocked && cell.setIdx >= 0 ? ` locked cat-${cell.setIdx}` : cell.isLocked ? " locked" : ""}${tileClass(key, dragDisabled)}`}
+                className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""}${cell.isLocked && cell.tier >= 0 && cell.tier < 4 ? ` locked cat-${cell.tier}` : cell.isLocked ? " locked" : ""}${tileClass(key, dragDisabled)}`}
                 onClick={() => {
                   if (suppressClickRef.current) {
                     suppressClickRef.current = false
@@ -129,14 +139,16 @@ export function MiddleGrid({
         <div className="selection-header">Answers</div>
         <div className="selection-body">
           {lockedAnswers.length > 0 ? (
-            [0, 1, 2, 3].map(setIdx => {
-              const answer = lockedAnswers.find(a => a.setIndex === setIdx)
+            [0, 1, 2, 3].map(tier => {
+              const answer = lockedAnswers.find(
+                a => tierIndex(a.categorySetIndex, discoveredCategories) === tier
+              )
               return answer ? (
-                <div key={setIdx} className={`locked-line cat-${setIdx}`}>
+                <div key={tier} className={`locked-line cat-${tier}`}>
                   {answer.text.split(" ").join("")}
                 </div>
               ) : (
-                <div key={setIdx} className="locked-line locked-line-empty" aria-hidden="true" />
+                <div key={tier} className="locked-line locked-line-empty" aria-hidden="true" />
               )
             })
           ) : (
