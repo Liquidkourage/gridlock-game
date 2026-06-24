@@ -11,8 +11,8 @@ function applyLayoutVars() {
 
   const headerHeight = Math.max(52, Math.round(vh * 0.072))
   const mainPad = Math.max(10, Math.round(Math.min(vw, vh) * 0.012))
-  const gridGap = Math.max(28, Math.round(Math.min(vw, vh) * 0.034))
-  const cellGap = Math.max(5, Math.round(gridGap * 0.45))
+  // Tile gap inside each 4×4 board — independent of card-to-card gap
+  const cellGap = Math.max(5, Math.round(Math.min(vw, vh) * 0.0063))
   const cardPad = Math.max(10, Math.round(vh * 0.01))
   const h1Size = Math.max(26, Math.round(vh * 0.036))
   const h3Size = Math.max(11, Math.round(vh * 0.012))
@@ -23,8 +23,9 @@ function applyLayoutVars() {
   const answersPaneH = answersHeaderH + answerLineH * 4 + cellGap + 4
   const gameMaxW = Math.min(vw - mainPad * 2, 1040)
 
-  // Board-first: readable tiles trump fitting everything above the fold
-  const boardByWidth = Math.floor((gameMaxW - gridGap) / 2 - cardPad * 2)
+  // Size boards first using a nominal gap so card width is stable
+  const nominalCardGap = Math.max(10, Math.round(Math.min(vw, vh) * 0.014))
+  const boardByWidth = Math.floor((gameMaxW - nominalCardGap) / 2 - cardPad * 2)
   const boardByVh = Math.floor(vh * 0.215)
   const outerBoardMax = Math.max(
     172,
@@ -41,7 +42,9 @@ function applyLayoutVars() {
   const outerCardContentW = outerBoardMax + cardPad * 2
   const outerCardSize = outerCardContentW
 
-  const categoryCardWidth = Math.max(100, Math.min(Math.round(outerCardSize * 0.3), 140))
+  const categoryCardWidth = Math.max(96, Math.min(Math.round(outerCardSize * 0.28), 128))
+  // Gap between the four grid cards — must fit Categories at the intersection
+  const gridGap = Math.max(categoryCardWidth + 20, Math.round(Math.min(vw, vh) * 0.022))
   const categoryLineH = Math.max(12, Math.round(answerLineH * 0.58))
   const categoryFont = Math.max(9, Math.round(selectionFont * 0.68))
   const categoryPad = Math.max(4, Math.round(cardPad * 0.4))
