@@ -16,10 +16,13 @@ function applyLayoutVars() {
   const h3Size = Math.max(12, Math.round(vh * 0.013))
   const selectionRowH = Math.max(28, Math.round(vh * 0.03))
   const selectionFont = Math.max(11, Math.round(selectionRowH * 0.42))
+  const answersHeaderH = Math.max(14, Math.round(selectionFont * 1.15))
+  const answerLineH = Math.max(20, Math.round(selectionRowH * 0.58))
+  const answersPaneH = answersHeaderH + answerLineH * 2 + cellGap + 8
   const gameMaxW = Math.min(vw - 2 * mainPad, 900)
 
   const outerChromeH =
-    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + selectionRowH * 1.15
+    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + answersPaneH
 
   const toolbarH = 32
   const mainH = vh - headerHeight - 2 * mainPad
@@ -38,7 +41,7 @@ function applyLayoutVars() {
   const outerBoardMax = Math.max(120, outerCardSize - outerChromeH)
 
   const middleChromeH =
-    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + selectionRowH * 1.15
+    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + answersPaneH
   const middleSectionH = gameH * 0.36
   const middleCardByHeight = Math.floor(middleSectionH)
   const middleCardByWidth = Math.floor(gameMaxW)
@@ -64,6 +67,8 @@ function applyLayoutVars() {
   root.setProperty("--h3-size", `${h3Size}px`)
   root.setProperty("--selection-row-h", `${selectionRowH}px`)
   root.setProperty("--selection-font", `${selectionFont}px`)
+  root.setProperty("--answers-pane-h", `${answersPaneH}px`)
+  root.setProperty("--answer-line-h", `${answerLineH}px`)
   root.setProperty("--game-max-w", `${gameMaxW}px`)
   root.setProperty("--outer-card-size", `${outerCardSize}px`)
   root.setProperty("--middle-card-size", `${middleCardSize}px`)

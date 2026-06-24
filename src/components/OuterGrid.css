@@ -136,8 +136,8 @@
 .selection-output.answers {
   display: grid;
   grid-template-rows: auto 1fr;
-  flex: 0 0 calc(var(--selection-row-h, 46px) * 1.15);
-  min-height: 0;
+  flex: 0 0 var(--answers-pane-h, 72px);
+  min-height: var(--answers-pane-h, 72px);
 }
 
 .selection-output.answers .selection-header {
@@ -165,7 +165,8 @@
   border: 1px solid rgba(76, 175, 80, 0.25);
   color: #8ef59a;
   border-radius: 6px;
-  padding: 4px 6px;
+  padding: 2px 4px;
+  min-height: var(--answer-line-h, 20px);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -173,7 +174,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--selection-font, 16px) * 0.88);
+  font-size: calc(var(--selection-font, 16px) * 0.82);
 }
 
 .locked-line {
