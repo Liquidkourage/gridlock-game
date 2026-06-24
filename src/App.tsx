@@ -1,6 +1,8 @@
 import React, { useLayoutEffect } from "react"
 import "./App.css"
 import { GridLockGame } from "./components/GridLockGame"
+import { CreatorPage } from "./pages/CreatorPage"
+import { usePathname } from "./router"
 
 function applyLayoutVars() {
   const vw = window.innerWidth
@@ -58,11 +60,17 @@ function applyLayoutVars() {
 }
 
 export default function App() {
+  const pathname = usePathname()
+
   useLayoutEffect(() => {
     applyLayoutVars()
     window.addEventListener("resize", applyLayoutVars)
     return () => window.removeEventListener("resize", applyLayoutVars)
   }, [])
+
+  if (pathname === "/creator") {
+    return <CreatorPage />
+  }
 
   return (
     <div className="app">

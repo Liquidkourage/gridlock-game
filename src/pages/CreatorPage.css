@@ -1,0 +1,77 @@
+.creator-app .creator-header {
+  text-align: left;
+}
+
+.creator-header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 920px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.creator-header-text {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.creator-header-text h1 {
+  font-size: var(--h1-size, 28px);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.creator-header-text p {
+  color: var(--text-muted);
+  font-size: clamp(0.8rem, 1.8vh, 0.95rem);
+  margin-top: 3px;
+  letter-spacing: 0.04em;
+}
+
+.creator-back {
+  flex: 0 0 auto;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+
+.creator-back:hover {
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.creator-main {
+  max-width: 920px;
+}
+
+.creator-main .puzzle-loader input,
+.creator-main .puzzle-loader textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: var(--text-primary);
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.creator-main .puzzle-loader button {
+  background: linear-gradient(180deg, #355b35 0%, #2b4a2b 100%);
+  color: #dfffe3;
+  border: 1px solid rgba(123, 212, 123, 0.35);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}

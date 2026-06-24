@@ -8,15 +8,31 @@
   padding-bottom: var(--grid-gap, 12px);
 }
 
-.game-grid {
+.play-layout {
   display: grid;
-  grid-template-columns: repeat(2, max-content);
-  grid-template-rows: repeat(2, max-content);
+  grid-template-columns: max-content max-content max-content;
+  grid-template-rows: max-content max-content;
+  grid-template-areas:
+    "g1 categories g2"
+    "g3 categories g4";
   gap: var(--grid-gap, 12px);
-  flex: 0 0 auto;
   width: 100%;
   justify-content: center;
-  align-content: start;
+  align-content: center;
+}
+
+.play-cell-g1 { grid-area: g1; }
+.play-cell-g2 { grid-area: g2; }
+.play-cell-g3 { grid-area: g3; }
+.play-cell-g4 { grid-area: g4; }
+
+.play-cell-categories {
+  grid-area: categories;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  justify-self: center;
 }
 
 .grid-board-wrap {
@@ -167,83 +183,3 @@
   font-size: 1rem;
 }
 
-.category-wrap {
-  display: flex;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 100%;
-  margin-top: var(--grid-gap, 12px);
-}
-
-.toolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: var(--grid-gap, 12px);
-  flex: 0 0 auto;
-}
-
-.toolbar-btn {
-  background: linear-gradient(180deg, #355b35 0%, #2b4a2b 100%);
-  color: #dfffe3;
-  border: 1px solid rgba(123, 212, 123, 0.35);
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.85rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: filter 0.12s ease, transform 0.12s ease;
-}
-
-.toolbar-btn:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal {
-  background: var(--bg-panel);
-  border: 1px solid var(--bg-panel-edge);
-  border-radius: 12px;
-  width: min(920px, 92vw);
-  max-height: 88vh;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  overflow: hidden;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--bg-panel-edge);
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
-.modal-body {
-  padding: 16px;
-  overflow: auto;
-}
-
-.close-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  color: var(--text-primary);
-}

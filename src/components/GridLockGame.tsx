@@ -5,7 +5,6 @@ import { CategoryReveal } from "./CategoryReveal"
 import type { Answer, Block, GameState } from "../types/game"
 import type { Puzzle } from "../data/puzzles"
 import { loadPuzzle, shuffleDeterministic, rng, seedFromString } from "../data/puzzles"
-import { PuzzleLoader } from "./PuzzleLoader"
 import { allCategorySetsComplete, getCategoryName } from "../utils/categorySets"
 
 function buildBlocks(tokens: string[], gridId: number): Block[] {
@@ -40,8 +39,6 @@ export function GridLockGame() {
   const [activeGridId, setActiveGridId] = useState<number | null>(null)
   const [wrongFeedback, setWrongFeedback] = useState<boolean[]>([false, false, false, false])
   const [successFeedback, setSuccessFeedback] = useState<boolean[]>([false, false, false, false])
-  const [showLoader, setShowLoader] = useState<boolean>(false)
-
   const boot = (id: string) => {
     loadPuzzle(id)
       .then(data => {
@@ -259,52 +256,34 @@ export function GridLockGame() {
 
   return (
     <div className="gridlock-game">
-      <div className="toolbar">
-        <button className="toolbar-btn" onClick={() => setShowLoader(true)}>Set Puzzle</button>
-      </div>
-
-      {showLoader && (
-        <div className="modal-overlay" onClick={() => setShowLoader(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>Set Puzzle</div>
-              <button className="close-btn" onClick={() => setShowLoader(false)}>×</button>
-            </div>
-            <div className="modal-body">
-              <PuzzleLoader onLoad={(id) => { boot(id); setShowLoader(false) }} />
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="game-grid">
+      <div className="play-layout">
         {grids.map(grid => (
-          <OuterGrid
-            key={grid.id}
-            gridId={grid.id}
-            title={`Grid ${grid.id}`}
-            blocks={grid.blocks}
-            selected={gameState.selectedBlocks}
-            lockedAnswers={gameState.lockedAnswers.filter(a => a.category === `Grid ${grid.id}`)}
-            discoveredCategories={gameState.discoveredOuterCategories}
-            onToggleSelect={onToggleSelect}
-            onClearSelection={() => onClearSelection(grid.id)}
-            onShuffle={() => shuffleGrid(grid.id)}
-            onSwapTiles={(fromId, toId) => swapOuterGridTiles(grid.id, fromId, toId)}
-            disableInteraction={activeGridId !== null && activeGridId !== grid.id}
-            wrongFeedback={wrongFeedback[grid.id - 1]}
-            successFeedback={successFeedback[grid.id - 1]}
-          />
+          <div key={grid.id} className={`play-cell play-cell-g${grid.id}`}>
+            <OuterGrid
+              gridId={grid.id}
+              title={`Grid ${grid.id}`}
+              blocks={grid.blocks}
+              selected={gameState.selectedBlocks}
+              lockedAnswers={gameState.lockedAnswers.filter(a => a.category === `Grid ${grid.id}`)}
+              discoveredCategories={gameState.discoveredOuterCategories}
+              onToggleSelect={onToggleSelect}
+              onClearSelection={() => onClearSelection(grid.id)}
+              onShuffle={() => shuffleGrid(grid.id)}
+              onSwapTiles={(fromId, toId) => swapOuterGridTiles(grid.id, fromId, toId)}
+              disableInteraction={activeGridId !== null && activeGridId !== grid.id}
+              wrongFeedback={wrongFeedback[grid.id - 1]}
+              successFeedback={successFeedback[grid.id - 1]}
+            />
+          </div>
         ))}
-      </div>
-
-      <div className="category-wrap">
-        <CategoryReveal
-          categoryNames={categoryNames}
-          lockedAnswers={gameState.lockedAnswers}
-          discoveredCategories={gameState.discoveredOuterCategories}
-          gameComplete={gameState.gameComplete}
-        />
+        <div className="play-cell play-cell-categories">
+          <CategoryReveal
+            categoryNames={categoryNames}
+            lockedAnswers={gameState.lockedAnswers}
+            discoveredCategories={gameState.discoveredOuterCategories}
+            gameComplete={gameState.gameComplete}
+          />
+        </div>
       </div>
     </div>
   )
