@@ -1,11 +1,11 @@
 .gridlock-game {
-  max-width: var(--game-max-w, 1200px);
+  max-width: var(--game-max-w, 1040px);
   margin: 0 auto;
-  height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
+  padding-bottom: var(--grid-gap, 12px);
 }
 
 .game-grid {
@@ -19,63 +19,56 @@
   align-content: start;
 }
 
-/* Board sits in flex space inside square card */
 .grid-board-wrap {
-  flex: 1 1 0;
-  min-height: 0;
+  flex: 0 0 auto;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0 calc(var(--cell-gap, 6px) * 0.5);
+  margin: 0 0 calc(var(--cell-gap, 6px) * 0.6);
 }
 
 .grid-board-wrap > .grid-blocks,
 .grid-board-wrap > .middle-answers-4x4 {
-  width: var(--outer-board-max, 220px);
-  height: var(--outer-board-max, 220px);
-  max-width: 100%;
-  max-height: 100%;
+  width: var(--outer-board-max, 260px);
+  height: var(--outer-board-max, 260px);
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;
 }
 
 .grid-board-wrap > .middle-answers-4x4 {
-  width: var(--middle-board-max, 260px);
-  height: var(--middle-board-max, 260px);
+  width: var(--middle-board-max, 300px);
+  height: var(--middle-board-max, 300px);
 }
 
-/* Shared play board tray */
+/* Wall tray — Only Connect / Connections hybrid */
 .grid-blocks,
 .middle-answers-4x4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  gap: var(--cell-gap, 5px);
-  padding: calc(var(--cell-gap, 5px) + 3px);
-  background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.04) 0%, transparent 42%),
-    linear-gradient(180deg, #1e1d1b 0%, #121110 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  gap: var(--cell-gap, 6px);
+  padding: calc(var(--cell-gap, 6px) + 2px);
+  background: var(--tray-bg);
+  border: 1px solid var(--bg-panel-edge);
+  border-radius: 10px;
   box-shadow:
-    inset 0 2px 14px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 28px rgba(0, 0, 0, 0.35);
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.35);
   container-type: inline-size;
 }
 
-/* Shared tile styling */
+/* Tile — Connections cream wall */
 .grid-block,
 .middle-answer {
   appearance: none;
   -webkit-appearance: none;
-  border: none;
-  border-radius: 6px;
-  color: #f5f3ea;
-  font-size: clamp(10px, 5.2cqi, 15px);
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  border: 1px solid var(--tile-border);
+  border-radius: 5px;
+  color: var(--tile-text);
+  font-size: clamp(11px, 20cqi, 18px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   cursor: pointer;
   display: flex;
@@ -84,20 +77,16 @@
   min-height: 0;
   min-width: 0;
   overflow: hidden;
-  padding: 2px 3px;
-  line-height: 1.05;
+  padding: 3px 4px;
+  line-height: 1.1;
   text-align: center;
-  background: linear-gradient(180deg, #737066 0%, #5e5c54 48%, #504e47 100%);
-  box-shadow:
-    0 2px 0 #3a3833,
-    0 4px 10px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  background: var(--tile-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
   transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    filter 0.12s ease,
-    background 0.12s ease,
-    opacity 0.12s ease;
+    transform 0.1s ease,
+    background 0.1s ease,
+    box-shadow 0.1s ease,
+    opacity 0.1s ease;
 }
 
 .grid-block[draggable="true"],
@@ -112,97 +101,93 @@
 
 .grid-block.dragging,
 .middle-answer.dragging {
-  opacity: 0.45;
-  transform: scale(0.94);
+  opacity: 0.5;
+  transform: scale(0.96);
   cursor: grabbing;
   z-index: 2;
 }
 
 .grid-block.drop-target,
 .middle-answer.drop-target {
-  box-shadow:
-    0 0 0 2px #9be59b,
-    0 0 14px rgba(123, 212, 123, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transform: scale(1.03);
+  box-shadow: 0 0 0 2px var(--accent);
+  transform: scale(1.02);
 }
 
-.grid-block:hover:not(:disabled),
+.grid-block:hover:not(:disabled):not(.locked),
 .middle-answer.revealed:hover:not(.locked) {
-  filter: brightness(1.08);
+  background: var(--tile-bg-hover);
   transform: translateY(-1px);
-  box-shadow:
-    0 3px 0 #3a3833,
-    0 6px 14px rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
 }
 
-.grid-block:active:not(:disabled),
+.grid-block:active:not(:disabled):not(.locked),
 .middle-answer.revealed:active:not(.locked) {
-  transform: translateY(1px);
-  box-shadow:
-    0 1px 0 #3a3833,
-    0 2px 6px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transform: translateY(0);
 }
 
 .grid-block.selected,
 .middle-answer.selected {
-  background: linear-gradient(180deg, #4f8f52 0%, #3d7340 52%, #326633 100%);
-  color: #f3fff4;
-  box-shadow:
-    0 2px 0 #285528,
-    0 0 0 2px rgba(123, 212, 123, 0.55),
-    0 6px 16px rgba(46, 125, 50, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: var(--select-bg);
+  color: var(--select-text);
+  border-color: #e8cf5a;
+  box-shadow: 0 0 0 1px #e8cf5a;
 }
 
 .grid-block.locked,
 .middle-answer.locked {
-  background: linear-gradient(180deg, #3a5f3c 0%, #2f4f31 52%, #274428 100%);
-  color: #d4f5d6;
+  color: var(--tile-text);
   cursor: not-allowed;
-  opacity: 1;
-  box-shadow:
-    0 2px 0 #1f3a21,
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: transparent;
+  box-shadow: none;
 }
 
+.grid-block.locked.cat-0,
+.middle-answer.locked.cat-0 { background: var(--cat-yellow); }
+.grid-block.locked.cat-1,
+.middle-answer.locked.cat-1 { background: var(--cat-green); }
+.grid-block.locked.cat-2,
+.middle-answer.locked.cat-2 { background: var(--cat-blue); }
+.grid-block.locked.cat-3,
+.middle-answer.locked.cat-3 { background: var(--cat-purple); }
+
 .middle-answer.hidden {
-  background: linear-gradient(180deg, #4a4944 0%, #3d3c38 52%, #34332f 100%);
-  color: #9a9890;
+  background: #2a2a32;
+  color: #6a6a72;
+  border-color: #3a3a44;
   cursor: default;
-  box-shadow:
-    0 2px 0 #2a2926,
-    inset 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .middle-answer.hidden::after {
-  opacity: 0.65;
+  opacity: 0.5;
 }
 
+.middle-answer.revealed {
+  background: var(--tile-bg);
+  color: var(--tile-text);
+}
 
 .loading {
   text-align: center;
-  padding: 1rem;
-  color: #888;
+  padding: 2rem;
+  color: var(--text-muted);
 }
 
 .game-complete {
   text-align: center;
   padding: 1rem;
-  background: #1a1a1a;
+  background: var(--bg-panel);
   border-radius: 12px;
   margin-top: 0.5rem;
 }
 
 .game-complete h2 {
-  color: #4CAF50;
+  color: var(--cat-green);
   margin-bottom: 0.5rem;
 }
 
 .game-complete p {
-  color: #ccc;
+  color: var(--text-muted);
   font-size: 1rem;
 }
 
@@ -228,27 +213,27 @@
 }
 
 .toolbar-btn {
-  background: linear-gradient(180deg, #355b35 0%, #2b4a2b 100%);
-  color: #dfffe3;
-  border: 1px solid rgba(123, 212, 123, 0.35);
-  padding: 6px 12px;
-  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--bg-panel-edge);
+  padding: 6px 14px;
+  border-radius: 999px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.85rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: filter 0.12s ease, transform 0.12s ease;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  transition: color 0.12s ease, border-color 0.12s ease;
 }
 
 .toolbar-btn:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
 }
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,9 +241,9 @@
 }
 
 .modal {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--bg-panel-edge);
+  border-radius: 12px;
   width: min(920px, 92vw);
   max-height: 88vh;
   display: grid;
@@ -270,25 +255,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 12px;
-  border-bottom: 1px solid #333;
-  color: #fff;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bg-panel-edge);
+  color: var(--text-primary);
   font-weight: 700;
 }
 
 .modal-body {
-  padding: 12px;
+  padding: 16px;
   overflow: auto;
 }
 
 .close-btn {
   background: transparent;
   border: none;
-  color: #ccc;
+  color: var(--text-muted);
   font-size: 20px;
   cursor: pointer;
 }
 
 .close-btn:hover {
-  color: #fff;
+  color: var(--text-primary);
 }

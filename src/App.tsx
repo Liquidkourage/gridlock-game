@@ -7,58 +7,40 @@ function applyLayoutVars() {
   const vh = window.innerHeight
   const root = document.documentElement.style
 
-  const headerHeight = Math.max(48, Math.round(vh * 0.06))
-  const mainPad = Math.max(8, Math.round(vh * 0.01))
-  const gridGap = Math.max(8, Math.round(Math.min(vw, vh) * 0.012))
-  const cellGap = Math.max(4, Math.round(gridGap * 0.5))
-  const cardPad = Math.max(6, Math.round(vh * 0.008))
-  const h1Size = Math.max(20, Math.round(vh * 0.042))
-  const h3Size = Math.max(12, Math.round(vh * 0.013))
-  const selectionRowH = Math.max(28, Math.round(vh * 0.03))
-  const selectionFont = Math.max(11, Math.round(selectionRowH * 0.42))
-  const answersHeaderH = Math.max(14, Math.round(selectionFont * 1.15))
-  const answerLineH = Math.max(20, Math.round(selectionRowH * 0.58))
-  const answersPaneH = answersHeaderH + answerLineH * 2 + cellGap + 8
-  const gameMaxW = Math.min(vw - 2 * mainPad, 900)
+  const headerHeight = Math.max(52, Math.round(vh * 0.072))
+  const mainPad = Math.max(10, Math.round(Math.min(vw, vh) * 0.012))
+  const gridGap = Math.max(10, Math.round(Math.min(vw, vh) * 0.014))
+  const cellGap = Math.max(5, Math.round(gridGap * 0.45))
+  const cardPad = Math.max(10, Math.round(vh * 0.01))
+  const h1Size = Math.max(26, Math.round(vh * 0.036))
+  const h3Size = Math.max(11, Math.round(vh * 0.012))
+  const selectionRowH = Math.max(28, Math.round(vh * 0.032))
+  const selectionFont = Math.max(12, Math.round(selectionRowH * 0.44))
+  const answersHeaderH = Math.max(13, Math.round(selectionFont * 1.05))
+  const answerLineH = Math.max(18, Math.round(selectionRowH * 0.52))
+  const answersPaneH = answersHeaderH + answerLineH * 2 + cellGap + 4
+  const gameMaxW = Math.min(vw - mainPad * 2, 1040)
 
-  const outerChromeH =
-    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + answersPaneH
-
-  const toolbarH = 32
-  const mainH = vh - headerHeight - 2 * mainPad
-  const gameH = Math.max(0, mainH - toolbarH - gridGap)
-  const outerSectionH = gameH * 0.64
-  const outerRowH = (outerSectionH - gridGap) / 2
-
-  // Square cards first; board fills remaining space inside the card
-  const outerCardByHeight = Math.floor(outerRowH)
-  const outerCardByWidth = Math.floor((gameMaxW - gridGap) / 2)
-  const outerCardSize = Math.max(
-    200,
-    Math.min(outerCardByHeight, outerCardByWidth, Math.floor(vh * 0.28))
+  // Board-first: readable tiles trump fitting everything above the fold
+  const boardByWidth = Math.floor((gameMaxW - gridGap) / 2 - cardPad * 2)
+  const boardByVh = Math.floor(vh * 0.19)
+  const outerBoardMax = Math.max(
+    168,
+    Math.min(boardByWidth, boardByVh, 260)
   )
 
-  const outerBoardMax = Math.max(120, outerCardSize - outerChromeH)
-
-  const middleChromeH =
-    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + answersPaneH
-  const middleSectionH = gameH * 0.36
-  const middleCardByHeight = Math.floor(middleSectionH)
-  const middleCardByWidth = Math.floor(gameMaxW)
-  const middleCardSize = Math.max(
-    220,
+  const middleBoardMax = Math.max(
+    184,
     Math.min(
-      middleCardByHeight,
-      middleCardByWidth,
-      Math.floor(outerCardSize * 1.08),
-      Math.floor(vh * 0.32)
+      Math.floor(outerBoardMax * 1.12),
+      Math.floor(gameMaxW - cardPad * 2),
+      Math.floor(vh * 0.22),
+      300
     )
   )
 
-  const middleBoardMax = Math.max(140, middleCardSize - middleChromeH)
-
   root.setProperty("--app-header-height", `${headerHeight}px`)
-  root.setProperty("--app-header-pad", `${Math.round(headerHeight * 0.16)}px`)
+  root.setProperty("--app-header-pad", `${Math.round(headerHeight * 0.18)}px`)
   root.setProperty("--app-main-pad", `${mainPad}px`)
   root.setProperty("--grid-gap", `${gridGap}px`)
   root.setProperty("--cell-gap", `${cellGap}px`)
@@ -70,10 +52,10 @@ function applyLayoutVars() {
   root.setProperty("--answers-pane-h", `${answersPaneH}px`)
   root.setProperty("--answer-line-h", `${answerLineH}px`)
   root.setProperty("--game-max-w", `${gameMaxW}px`)
-  root.setProperty("--outer-card-size", `${outerCardSize}px`)
-  root.setProperty("--middle-card-size", `${middleCardSize}px`)
   root.setProperty("--outer-board-max", `${outerBoardMax}px`)
   root.setProperty("--middle-board-max", `${middleBoardMax}px`)
+  root.setProperty("--outer-card-w", `${outerBoardMax + cardPad * 2}px`)
+  root.setProperty("--middle-card-w", `${middleBoardMax + cardPad * 2}px`)
 }
 
 export default function App() {
@@ -87,7 +69,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <h1>GridLock</h1>
-        <p>Daily puzzle prototype (React)</p>
+        <p>Find the links. Lock the grid.</p>
       </header>
       <main className="app-main">
         <GridLockGame />

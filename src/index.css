@@ -1,3 +1,23 @@
+:root {
+  --bg-deep: #121212;
+  --bg-panel: #1a1a18;
+  --bg-panel-edge: #2a2a26;
+  --text-primary: #f4f4f0;
+  --text-muted: #9a9890;
+  --tile-bg: #efefe6;
+  --tile-bg-hover: #e4e4da;
+  --tile-text: #1a1a18;
+  --tile-border: #d4d4c8;
+  --tray-bg: #0f0f0e;
+  --select-bg: #f9df6d;
+  --select-text: #1a1a18;
+  --cat-yellow: #f9df6d;
+  --cat-green: #a0c35a;
+  --cat-blue: #b0c4ef;
+  --cat-purple: #ba81c5;
+  --accent: #a0c35a;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,9 +25,9 @@
 }
 
 body {
-  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  background: #0a0a0a;
-  color: #ffffff;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

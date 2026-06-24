@@ -34,6 +34,7 @@ export function OuterGrid({
 }: Props) {
   const isSelected = (b: Block) => selected.some(s => s.id === b.id)
   const isLocked = (b: Block) => lockedAnswers.some(a => a.blocks.some(x => x.id === b.id))
+  const groupIndex = (b: Block) => lockedAnswers.findIndex(a => a.blocks.some(x => x.id === b.id))
   const selectedForThisGrid = selected.filter(b => b.gridIndex === gridId)
 
   const handleSwap = useCallback(
@@ -81,7 +82,7 @@ export function OuterGrid({
             return (
               <button
                 key={block.id}
-                className={`grid-block${isSelected(block) ? " selected" : ""}${locked ? " locked" : ""}${tileClass(block.id, dragDisabled)}`}
+                className={`grid-block${isSelected(block) ? " selected" : ""}${locked ? ` locked cat-${groupIndex(block)}` : ""}${tileClass(block.id, dragDisabled)}`}
                 onClick={() => {
                   if (suppressClickRef.current) {
                     suppressClickRef.current = false
@@ -115,7 +116,7 @@ export function OuterGrid({
         <div className="selection-header">Answers</div>
         <div className="selection-body">
           {lockedAnswers.length > 0 ? lockedAnswers.map((a, idx) => (
-            <div key={idx} className="locked-line">{a.text.split(" ").join("")}</div>
+            <div key={idx} className={`locked-line cat-${idx}`}>{a.text.split(" ").join("")}</div>
           )) : "—"}
         </div>
       </div>

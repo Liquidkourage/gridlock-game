@@ -1,21 +1,16 @@
 .outer-grid {
-  background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
-    linear-gradient(180deg, #232220 0%, #171615 100%);
-  border-radius: 14px;
-  padding: var(--card-pad, 10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: var(--bg-panel);
+  border-radius: 12px;
+  padding: var(--card-pad, 12px);
+  border: 1px solid var(--bg-panel-edge);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   overflow: hidden;
-  width: var(--outer-card-size, 280px);
-  height: var(--outer-card-size, 280px);
-  aspect-ratio: 1 / 1;
+  width: var(--outer-card-w, 280px);
   max-width: 100%;
+  height: auto;
   justify-self: center;
   box-sizing: border-box;
 }
@@ -23,18 +18,20 @@
 .outer-grid .grid-board-wrap,
 .outer-grid .selection-row,
 .outer-grid > .selection-output.answers {
-  width: 100%;
+  width: var(--outer-board-max, 260px);
   max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
 }
 
 .outer-grid h3 {
-  color: #eceae3;
-  margin-bottom: calc(var(--cell-gap, 6px) * 0.75);
+  color: var(--text-muted);
+  margin-bottom: calc(var(--cell-gap, 6px) * 0.6);
   text-align: center;
-  font-size: var(--h3-size, 16px);
+  font-size: var(--h3-size, 12px);
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   line-height: 1;
   flex: 0 0 auto;
@@ -42,38 +39,37 @@
 
 .answer-input {
   display: flex;
-  gap: 0.5rem;
+  gap: 6px;
   margin-bottom: 0;
+  flex-shrink: 0;
 }
 
 .answer-input button {
-  background: linear-gradient(180deg, #4caf50 0%, #3d9140 100%);
-  color: white;
+  background: var(--accent);
+  color: var(--tile-text);
   border: none;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 0 10px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 700;
-  font-size: calc(var(--selection-font, 14px) * 0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: filter 0.12s ease, transform 0.12s ease;
+  font-size: calc(var(--selection-font, 13px) * 0.88);
+  white-space: nowrap;
+  transition: filter 0.1s ease;
 }
 
 .answer-input button:first-child {
-  background: linear-gradient(180deg, #4a4a4a 0%, #383838 100%);
+  background: #3a3a36;
+  color: var(--text-primary);
 }
 
 .answer-input button:hover:not(:disabled) {
   filter: brightness(1.08);
-  transform: translateY(-1px);
 }
 
 .answer-input button:disabled {
-  background: #555;
+  opacity: 0.45;
   cursor: not-allowed;
   filter: none;
-  transform: none;
-  opacity: 0.55;
 }
 
 .locked-answers,
@@ -86,27 +82,23 @@
 }
 
 .selection-output {
-  background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35);
-  flex: 0 0 var(--selection-row-h, 46px);
+  background: var(--tray-bg);
+  border: 1px solid var(--bg-panel-edge);
+  border-radius: 6px;
+  flex: 0 0 var(--selection-row-h, 36px);
   min-height: 0;
+  overflow: hidden;
 }
 
 .selection-output.lcd {
-  background: linear-gradient(180deg, #121a12 0%, #0d140d 100%);
-  border-color: rgba(76, 175, 80, 0.35);
-  box-shadow:
-    inset 0 0 0 1px rgba(76, 175, 80, 0.2),
-    inset 0 0 16px rgba(76, 175, 80, 0.08);
+  border-color: rgba(160, 195, 90, 0.35);
 }
 
 .selection-header {
-  font-size: calc(var(--selection-font, 16px) * 0.78);
-  color: #9a9890;
-  padding: 0.15rem 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: calc(var(--selection-font, 13px) * 0.72);
+  color: var(--text-muted);
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--bg-panel-edge);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   line-height: 1;
@@ -114,23 +106,22 @@
 }
 
 .selection-body {
-  color: #fff;
-  font-weight: 800;
-  font-family: "Consolas", "SF Mono", monospace;
-  padding: 0.15rem 0.5rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-family: inherit;
+  padding: 0 8px;
   min-height: 0;
-  font-size: var(--selection-font, 16px);
-  letter-spacing: 0.06em;
+  font-size: var(--selection-font, 13px);
+  letter-spacing: 0.04em;
   line-height: 1;
   display: flex;
   align-items: center;
+  height: 100%;
 }
 
 .selection-output.lcd .selection-body {
-  color: #b7ffbf;
-  text-shadow: 0 0 8px rgba(76, 175, 80, 0.35);
-  letter-spacing: 0.12em;
-  font-size: calc(var(--selection-font, 16px) * 1.05);
+  color: var(--cat-green);
+  letter-spacing: 0.08em;
 }
 
 .selection-output.answers {
@@ -141,8 +132,7 @@
 }
 
 .selection-output.answers .selection-header {
-  padding: 2px 6px;
-  font-size: calc(var(--selection-font, 16px) * 0.72);
+  padding: 3px 8px;
 }
 
 .selection-output.answers .selection-body {
@@ -150,10 +140,9 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: calc(var(--cell-gap, 6px) * 0.8);
-  font-family: "Consolas", "SF Mono", monospace;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  gap: calc(var(--cell-gap, 6px) * 0.7);
+  font-weight: 700;
+  letter-spacing: 0.03em;
   align-content: stretch;
   align-items: stretch;
   padding: 4px 6px;
@@ -161,12 +150,12 @@
 }
 
 .selection-output.answers .locked-line {
-  background: linear-gradient(180deg, #1a2e1a 0%, #122012 100%);
-  border: 1px solid rgba(76, 175, 80, 0.25);
-  color: #8ef59a;
-  border-radius: 6px;
+  background: rgba(160, 195, 90, 0.12);
+  border: 1px solid rgba(160, 195, 90, 0.3);
+  color: var(--cat-green);
+  border-radius: 5px;
   padding: 2px 4px;
-  min-height: var(--answer-line-h, 20px);
+  min-height: var(--answer-line-h, 22px);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -174,12 +163,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(var(--selection-font, 16px) * 0.82);
+  font-size: calc(var(--selection-font, 13px) * 0.85);
+}
+
+.selection-output.answers .locked-line.cat-0 {
+  background: rgba(249, 223, 109, 0.15);
+  border-color: rgba(249, 223, 109, 0.4);
+  color: var(--cat-yellow);
+}
+
+.selection-output.answers .locked-line.cat-1 {
+  background: rgba(160, 195, 90, 0.15);
+  border-color: rgba(160, 195, 90, 0.4);
+  color: var(--cat-green);
+}
+
+.selection-output.answers .locked-line.cat-2 {
+  background: rgba(176, 196, 239, 0.15);
+  border-color: rgba(176, 196, 239, 0.4);
+  color: var(--cat-blue);
+}
+
+.selection-output.answers .locked-line.cat-3 {
+  background: rgba(186, 129, 197, 0.15);
+  border-color: rgba(186, 129, 197, 0.4);
+  color: var(--cat-purple);
 }
 
 .locked-line {
-  margin: 0 0.5rem 0 0;
-  color: #4CAF50;
+  margin: 0;
   display: inline-block;
 }
 
@@ -190,9 +202,9 @@
 }
 
 @keyframes success-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
-  70% { box-shadow: 0 0 0 8px rgba(76, 175, 80, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(160, 195, 90, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(160, 195, 90, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(160, 195, 90, 0); }
 }
 
 .outer-grid.wrong {
@@ -201,7 +213,7 @@
 
 .outer-grid.success {
   animation: success-pulse 0.6s ease-out;
-  border-color: rgba(76, 175, 80, 0.45);
+  border-color: rgba(160, 195, 90, 0.45);
 }
 
 .selection-output.wrong {
@@ -213,12 +225,13 @@
   display: flex;
   gap: var(--cell-gap, 6px);
   align-items: stretch;
-  margin: 0 0 calc(var(--cell-gap, 6px) * 0.75);
-  flex: 0 0 var(--selection-row-h, 46px);
+  margin: 0 0 calc(var(--cell-gap, 6px) * 0.6);
+  flex: 0 0 var(--selection-row-h, 36px);
 }
 
 .selection-row .selection-output {
   flex: 1 1 auto;
+  min-width: 0;
 }
 
 .selection-row .answer-input {

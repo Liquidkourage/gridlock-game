@@ -83,7 +83,10 @@ export function MiddleGrid({
     const blockId = block?.id || ""
     const isSelected = block ? selected.some(b => b.id === blockId) : false
     const isLocked = block ? lockedAnswers.some(a => a.blocks.some(x => x.id === blockId)) : false
-    return { i: dataIdx, text, hl, revealed: isRevealed, block, isSelected, isLocked }
+    const catIdx = block && isLocked
+      ? lockedAnswers.findIndex(a => a.blocks.some(x => x.id === blockId))
+      : -1
+    return { i: dataIdx, text, hl, revealed: isRevealed, block, isSelected, isLocked, catIdx }
   })
 
   return (
@@ -98,7 +101,7 @@ export function MiddleGrid({
             return (
               <div
                 key={key}
-                className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""} ${cell.isLocked ? "locked" : ""}${tileClass(key, dragDisabled)}`}
+                className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""}${cell.isLocked ? ` locked cat-${cell.catIdx}` : ""}${tileClass(key, dragDisabled)}`}
                 onClick={() => {
                   if (suppressClickRef.current) {
                     suppressClickRef.current = false
@@ -137,7 +140,7 @@ export function MiddleGrid({
         <div className="selection-header">Answers</div>
         <div className="selection-body">
           {lockedAnswers.length > 0 ? lockedAnswers.map((a, idx) => (
-            <div key={idx} className="locked-line">{a.text.split(" ").join("")}</div>
+            <div key={idx} className={`locked-line cat-${idx}`}>{a.text.split(" ").join("")}</div>
           )) : "—"}
         </div>
       </div>
