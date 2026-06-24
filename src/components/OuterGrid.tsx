@@ -18,6 +18,11 @@ interface Props {
   successFeedback?: boolean
 }
 
+function setIndexForBlock(lockedAnswers: Answer[], blockId: string): number {
+  const answer = lockedAnswers.find(a => a.blocks.some(x => x.id === blockId))
+  return answer?.setIndex ?? -1
+}
+
 export function OuterGrid({
   gridId,
   title,
@@ -34,7 +39,6 @@ export function OuterGrid({
 }: Props) {
   const isSelected = (b: Block) => selected.some(s => s.id === b.id)
   const isLocked = (b: Block) => lockedAnswers.some(a => a.blocks.some(x => x.id === b.id))
-  const groupIndex = (b: Block) => lockedAnswers.findIndex(a => a.blocks.some(x => x.id === b.id))
   const selectedForThisGrid = selected.filter(b => b.gridIndex === gridId)
 
   const handleSwap = useCallback(
@@ -43,23 +47,22 @@ export function OuterGrid({
   )
   const { bindTile, tileClass, suppressClickRef } = useTileDragSwap(handleSwap)
 
-  // Order blocks so locked answers occupy the top rows (first 4, then next 4, ...)
-  // For unlocked blocks, preserve the incoming array order (supports shuffling)
+  // Locked groups snap to their set row (set 0 → row 1, set 1 → row 2, …)
   const orderedBlocks = React.useMemo(() => {
-    const blockToGroupIndex = new Map<string, number>()
+    const blockToSetIndex = new Map<string, number>()
     const blockToWithinGroup = new Map<string, number>()
     const indexById = new Map<string, number>()
     blocks.forEach((b, idx) => indexById.set(b.id, idx))
 
-    lockedAnswers.forEach((ans, groupIdx) => {
+    lockedAnswers.forEach(ans => {
       ans.blocks.forEach((b, i) => {
-        blockToGroupIndex.set(b.id, groupIdx)
+        blockToSetIndex.set(b.id, ans.setIndex)
         blockToWithinGroup.set(b.id, i)
       })
     })
     return [...blocks].sort((a, b) => {
-      const ga = blockToGroupIndex.has(a.id) ? blockToGroupIndex.get(a.id)! : Number.POSITIVE_INFINITY
-      const gb = blockToGroupIndex.has(b.id) ? blockToGroupIndex.get(b.id)! : Number.POSITIVE_INFINITY
+      const ga = blockToSetIndex.has(a.id) ? blockToSetIndex.get(a.id)! : Number.POSITIVE_INFINITY
+      const gb = blockToSetIndex.has(b.id) ? blockToSetIndex.get(b.id)! : Number.POSITIVE_INFINITY
       if (ga !== gb) return ga - gb
       if (ga !== Number.POSITIVE_INFINITY) {
         const ia = blockToWithinGroup.get(a.id) ?? 0
@@ -77,12 +80,13 @@ export function OuterGrid({
         <div className="grid-blocks">
           {orderedBlocks.map(block => {
             const locked = isLocked(block)
+            const setIdx = setIndexForBlock(lockedAnswers, block.id)
             const dragDisabled = locked || Boolean(disableInteraction)
             const drag = bindTile(block.id, dragDisabled)
             return (
               <button
                 key={block.id}
-                className={`grid-block${isSelected(block) ? " selected" : ""}${locked ? ` locked cat-${groupIndex(block)}` : ""}${tileClass(block.id, dragDisabled)}`}
+                className={`grid-block${isSelected(block) ? " selected" : ""}${locked && setIdx >= 0 ? ` locked cat-${setIdx}` : locked ? " locked" : ""}${tileClass(block.id, dragDisabled)}`}
                 onClick={() => {
                   if (suppressClickRef.current) {
                     suppressClickRef.current = false
@@ -115,9 +119,20 @@ export function OuterGrid({
       <div className="selection-output answers">
         <div className="selection-header">Answers</div>
         <div className="selection-body">
-          {lockedAnswers.length > 0 ? lockedAnswers.map((a, idx) => (
-            <div key={idx} className={`locked-line cat-${idx}`}>{a.text.split(" ").join("")}</div>
-          )) : "—"}
+          {lockedAnswers.length > 0 ? (
+            [0, 1, 2, 3].map(setIdx => {
+              const answer = lockedAnswers.find(a => a.setIndex === setIdx)
+              return answer ? (
+                <div key={setIdx} className={`locked-line cat-${setIdx}`}>
+                  {answer.text.split(" ").join("")}
+                </div>
+              ) : (
+                <div key={setIdx} className="locked-line locked-line-empty" aria-hidden="true" />
+              )
+            })
+          ) : (
+            "—"
+          )}
         </div>
       </div>
     </section>

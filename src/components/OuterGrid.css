@@ -185,6 +185,12 @@
   display: inline-block;
 }
 
+.locked-line-empty {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.06);
+  min-height: var(--answer-line-h, 22px);
+}
+
 @keyframes subtle-shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-3px); }

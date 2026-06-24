@@ -293,18 +293,28 @@ export function GridLockGame() {
         return { ...prev, selectedBlocks: [] }
       }
 
-      const newAnswer: Answer = { text: (matchedCategory as string[]).join(" "), category: `Grid ${gridId === 5 ? "Final" : gridId}`, blocks: prev.selectedBlocks }
-      const updatedLocked = [...prev.lockedAnswers, newAnswer]
-      // How many answers are now locked for this grid?
+      const setIndex = catList.findIndex(cat => arraysEqualUnordered(selectedTexts, cat))
+      if (setIndex < 0) return prev
+
       const categoryLabel = gridId === 5 ? `Grid Final` : `Grid ${gridId}`
-      const numLockedForGrid = updatedLocked.filter(a => a.category === categoryLabel).length
+      const alreadyLocked = prev.lockedAnswers.some(
+        a => a.category === categoryLabel && a.setIndex === setIndex
+      )
+      if (alreadyLocked) return { ...prev, selectedBlocks: [] }
+
+      const newAnswer: Answer = {
+        text: (matchedCategory as string[]).join(" "),
+        category: categoryLabel,
+        blocks: prev.selectedBlocks,
+        setIndex,
+      }
+      const updatedLocked = [...prev.lockedAnswers, newAnswer]
 
       // Reveal behavior
       const revealed = [...prev.revealedMiddleBlocks]
       if (gridId >= 1 && gridId <= 4) {
-        // For outer grids: pick the label for this solve using the grid's permutation
-        const labelPerm = labelPermutationByGrid[gridId] || [0,1,2,3]
-        const labelIdx = labelPerm[(numLockedForGrid - 1) % 4]
+        const labelPerm = labelPermutationByGrid[gridId] || [0, 1, 2, 3]
+        const labelIdx = labelPerm[setIndex]
         // For that label, choose the chunk index assigned to this grid
         const chunkMap = chunkIndexByLabelGrid[labelIdx] || [0,1,2,3]
         const chunkIdx = chunkMap[(gridId - 1) % 4]

@@ -1,6 +1,7 @@
 import React, { useCallback } from "react"
 import "./MiddleGrid.css"
 import { useTileDragSwap } from "./useTileDragSwap"
+import type { Answer } from "../types/game"
 
 interface Props {
   revealed: boolean[]
@@ -12,7 +13,7 @@ interface Props {
   onToggleSelect: (block: { id: string; text: string; gridIndex: number; position: number }) => void
   onClearSelection: () => void
   selected: { id: string; text: string; gridIndex: number; position: number }[]
-  lockedAnswers: { text: string; category: string; blocks: { id: string }[] }[]
+  lockedAnswers: Answer[]
   gameComplete: boolean
 }
 
@@ -37,7 +38,7 @@ export function MiddleGrid({
 
   const totalCells = 16
   const orderedDataIdxs = (() => {
-    const blockToGroupIndex = new Map<string, number>()
+    const blockToSetIndex = new Map<string, number>()
     const blockToWithinGroup = new Map<string, number>()
     const indexById = new Map<string, number>()
     for (let disp = 0; disp < totalCells; disp++) {
@@ -45,9 +46,9 @@ export function MiddleGrid({
       const id = blocks[dataIdx]?.id
       if (id) indexById.set(id, disp)
     }
-    lockedAnswers.forEach((ans, groupIdx) => {
+    lockedAnswers.forEach(ans => {
       ans.blocks.forEach((b, i) => {
-        blockToGroupIndex.set(b.id, groupIdx)
+        blockToSetIndex.set(b.id, ans.setIndex)
         blockToWithinGroup.set(b.id, i)
       })
     })
@@ -55,8 +56,8 @@ export function MiddleGrid({
     allIdxs.sort((a, b) => {
       const ida = blocks[a]?.id || ""
       const idb = blocks[b]?.id || ""
-      const ga = blockToGroupIndex.has(ida) ? blockToGroupIndex.get(ida)! : Number.POSITIVE_INFINITY
-      const gb = blockToGroupIndex.has(idb) ? blockToGroupIndex.get(idb)! : Number.POSITIVE_INFINITY
+      const ga = blockToSetIndex.has(ida) ? blockToSetIndex.get(ida)! : Number.POSITIVE_INFINITY
+      const gb = blockToSetIndex.has(idb) ? blockToSetIndex.get(idb)! : Number.POSITIVE_INFINITY
       if (ga !== gb) return ga - gb
       if (ga !== Number.POSITIVE_INFINITY) {
         const ia = blockToWithinGroup.get(ida) ?? 0
@@ -77,11 +78,10 @@ export function MiddleGrid({
     const block = blocks[dataIdx]
     const blockId = block?.id || ""
     const isSelected = block ? selected.some(b => b.id === blockId) : false
-    const isLocked = block ? lockedAnswers.some(a => a.blocks.some(x => x.id === blockId)) : false
-    const catIdx = block && isLocked
-      ? lockedAnswers.findIndex(a => a.blocks.some(x => x.id === blockId))
-      : -1
-    return { i: dataIdx, text, revealed: isRevealed, block, isSelected, isLocked, catIdx }
+    const lockedAnswer = block ? lockedAnswers.find(a => a.blocks.some(x => x.id === blockId)) : undefined
+    const isLocked = Boolean(lockedAnswer)
+    const setIdx = lockedAnswer?.setIndex ?? -1
+    return { i: dataIdx, text, revealed: isRevealed, block, isSelected, isLocked, setIdx }
   })
 
   return (
@@ -96,7 +96,7 @@ export function MiddleGrid({
             return (
               <div
                 key={key}
-                className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""}${cell.isLocked ? ` locked cat-${cell.catIdx}` : ""}${tileClass(key, dragDisabled)}`}
+                className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""}${cell.isLocked && cell.setIdx >= 0 ? ` locked cat-${cell.setIdx}` : cell.isLocked ? " locked" : ""}${tileClass(key, dragDisabled)}`}
                 onClick={() => {
                   if (suppressClickRef.current) {
                     suppressClickRef.current = false
@@ -128,9 +128,20 @@ export function MiddleGrid({
       <div className="selection-output answers">
         <div className="selection-header">Answers</div>
         <div className="selection-body">
-          {lockedAnswers.length > 0 ? lockedAnswers.map((a, idx) => (
-            <div key={idx} className={`locked-line cat-${idx}`}>{a.text.split(" ").join("")}</div>
-          )) : "—"}
+          {lockedAnswers.length > 0 ? (
+            [0, 1, 2, 3].map(setIdx => {
+              const answer = lockedAnswers.find(a => a.setIndex === setIdx)
+              return answer ? (
+                <div key={setIdx} className={`locked-line cat-${setIdx}`}>
+                  {answer.text.split(" ").join("")}
+                </div>
+              ) : (
+                <div key={setIdx} className="locked-line locked-line-empty" aria-hidden="true" />
+              )
+            })
+          ) : (
+            "—"
+          )}
         </div>
       </div>
 

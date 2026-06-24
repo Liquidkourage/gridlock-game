@@ -1,5 +1,7 @@
 /*
- * Set tier colors — pinned by solve order within each grid (cat-0 = 1st, … cat-3 = 4th).
+ * Set tier colors — pinned by category index (set 0–3) within each puzzle.
+ * Same set index = same color and same row across all outer grids
+ * (e.g. set 2 / gold / row 3 for "big cats" in every grid).
  * Default palette: Bronze → Silver → Gold → Platinum
  */
 
