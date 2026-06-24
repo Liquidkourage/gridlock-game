@@ -242,6 +242,46 @@ export function GridLockGame() {
     setActiveGridId(null)
   }
 
+  const isBlockLocked = (gridId: number, blockId: string) =>
+    gameState.lockedAnswers
+      .some(a => a.category === (gridId === 5 ? "Grid Final" : `Grid ${gridId}`) && a.blocks.some(b => b.id === blockId))
+
+  const swapOuterGridTiles = (gridId: number, blockIdA: string, blockIdB: string) => {
+    if (blockIdA === blockIdB) return
+    if (isBlockLocked(gridId, blockIdA) || isBlockLocked(gridId, blockIdB)) return
+    setGridBlocks(prev => {
+      const blocks = [...prev[gridId]]
+      const i = blocks.findIndex(b => b.id === blockIdA)
+      const j = blocks.findIndex(b => b.id === blockIdB)
+      if (i < 0 || j < 0) return prev
+      ;[blocks[i], blocks[j]] = [blocks[j], blocks[i]]
+      return { ...prev, [gridId]: blocks }
+    })
+    setGameState(prev => ({
+      ...prev,
+      selectedBlocks: prev.selectedBlocks.filter(b => b.gridIndex !== gridId),
+    }))
+    setActiveGridId(null)
+  }
+
+  const swapFinalGridTiles = (dataIdxA: number, dataIdxB: number) => {
+    if (dataIdxA === dataIdxB) return
+    if (isBlockLocked(5, `5-${dataIdxA}`) || isBlockLocked(5, `5-${dataIdxB}`)) return
+    setFinalOrder(prev => {
+      const posA = prev.indexOf(dataIdxA)
+      const posB = prev.indexOf(dataIdxB)
+      if (posA < 0 || posB < 0) return prev
+      const next = [...prev]
+      ;[next[posA], next[posB]] = [next[posB], next[posA]]
+      return next
+    })
+    setGameState(prev => ({
+      ...prev,
+      selectedBlocks: prev.selectedBlocks.filter(b => b.gridIndex !== 5),
+    }))
+    setActiveGridId(null)
+  }
+
   const onToggleSelect = (block: Block) => {
     setGameState(prev => {
       if (prev.selectedBlocks.length > 0 && activeGridId !== null && activeGridId !== block.gridIndex) {
@@ -356,6 +396,7 @@ export function GridLockGame() {
             onSubmitSelection={() => onSubmitSelection(grid.id)}
             onClearSelection={() => onClearSelection(grid.id)}
             onShuffle={() => shuffleGrid(grid.id)}
+            onSwapTiles={(fromId, toId) => swapOuterGridTiles(grid.id, fromId, toId)}
             disableInteraction={activeGridId !== null && activeGridId !== grid.id}
             wrongFeedback={wrongFeedback[grid.id - 1]}
             successFeedback={successFeedback[grid.id - 1]}
@@ -368,6 +409,7 @@ export function GridLockGame() {
           revealed={gameState.revealedMiddleBlocks}
           order={finalOrder}
           onShuffle={shuffleFinal}
+          onSwapTiles={swapFinalGridTiles}
           labels={finalLabels16}
           highlights={finalHighlights16}
           blocks={finalBlocks}

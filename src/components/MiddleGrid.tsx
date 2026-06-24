@@ -1,29 +1,49 @@
-import React from "react"
+import React, { useCallback } from "react"
 import "./MiddleGrid.css"
+import { useTileDragSwap } from "./useTileDragSwap"
 
 interface Props {
   revealed: boolean[]
   order: number[]
   onShuffle: () => void
-  labels: string[] // 16 chunk texts
-  highlights: number[][] // 16 arrays of indices within each chunk to highlight
+  onSwapTiles: (fromDataIdx: number, toDataIdx: number) => void
+  labels: string[]
+  highlights: number[][]
   blocks: { id: string; text: string; gridIndex: number; position: number }[]
   onToggleSelect: (block: { id: string; text: string; gridIndex: number; position: number }) => void
   onClearSelection: () => void
   selected: { id: string; text: string; gridIndex: number; position: number }[]
   lockedAnswers: { text: string; category: string; blocks: { id: string }[] }[]
   gameComplete: boolean
+  finalWord: string
 }
 
-export function MiddleGrid({ revealed, order, onShuffle, labels, highlights, blocks, onToggleSelect, onClearSelection, selected, lockedAnswers, gameComplete }: Props) {
-  // Build 16 cells (4x4). Apply display order from 'order'. First 4 indices map to label reveals per row policy.
+export function MiddleGrid({
+  revealed,
+  order,
+  onShuffle,
+  onSwapTiles,
+  labels,
+  highlights,
+  blocks,
+  onToggleSelect,
+  onClearSelection,
+  selected,
+  lockedAnswers,
+  gameComplete,
+  finalWord,
+}: Props) {
+  const handleSwap = useCallback(
+    (fromKey: string, toKey: string) => onSwapTiles(Number(fromKey), Number(toKey)),
+    [onSwapTiles]
+  )
+  const { bindTile, tileClass, suppressClickRef } = useTileDragSwap(handleSwap)
+
   const totalCells = 16
-  // Build ordering: float locked groups to the top (like OuterGrid), preserve current shuffled order for the rest
   const orderedDataIdxs = (() => {
     const blockToGroupIndex = new Map<string, number>()
     const blockToWithinGroup = new Map<string, number>()
     const indexById = new Map<string, number>()
-    // Current visual order ranks by the provided 'order'
     for (let disp = 0; disp < totalCells; disp++) {
       const dataIdx = order[disp]
       const id = blocks[dataIdx]?.id
@@ -47,7 +67,6 @@ export function MiddleGrid({ revealed, order, onShuffle, labels, highlights, blo
         const ib = blockToWithinGroup.get(idb) ?? 0
         return ia - ib
       }
-      // Unlocked: preserve current display order rank
       const ra = indexById.get(ida) ?? 0
       const rb = indexById.get(idb) ?? 0
       return ra - rb
@@ -70,24 +89,38 @@ export function MiddleGrid({ revealed, order, onShuffle, labels, highlights, blo
   return (
     <section className="middle-grid">
       <h3>Final Grid <button className="mini-btn" onClick={onShuffle} title="Shuffle final grid">Shuffle</button></h3>
-      <div className="middle-answers middle-answers-4x4">
-        {cells.map((cell, displayIdx) => (
-          <div
-            key={displayIdx}
-            className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""} ${cell.isLocked ? "locked" : ""}`}
-            onClick={() => { if (cell.revealed && !cell.isLocked && cell.block) onToggleSelect(cell.block) }}
-          >
-            <div className="answer-text">
-              {cell.revealed ? (
-                cell.text.split("").map((ch, idx) => (
-                  <span key={idx} className={cell.hl.includes(idx) ? "hl" : undefined}>{ch}</span>
-                ))
-              ) : (
-                "???"
-              )}
-            </div>
-          </div>
-        ))}
+      <div className="grid-board-wrap">
+        <div className="middle-answers middle-answers-4x4">
+          {cells.map((cell) => {
+            const key = String(cell.i)
+            const dragDisabled = cell.isLocked || !cell.revealed
+            const drag = bindTile(key, dragDisabled)
+            return (
+              <div
+                key={key}
+                className={`middle-answer ${cell.revealed ? "revealed" : "hidden"} ${cell.isSelected ? "selected" : ""} ${cell.isLocked ? "locked" : ""}${tileClass(key, dragDisabled)}`}
+                onClick={() => {
+                  if (suppressClickRef.current) {
+                    suppressClickRef.current = false
+                    return
+                  }
+                  if (cell.revealed && !cell.isLocked && cell.block) onToggleSelect(cell.block)
+                }}
+                {...drag}
+              >
+                <div className="answer-text">
+                  {cell.revealed ? (
+                    cell.text.split("").map((ch, idx) => (
+                      <span key={idx} className={cell.hl.includes(idx) ? "hl" : undefined}>{ch}</span>
+                    ))
+                  ) : (
+                    "???"
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
       <div className="selection-row">
@@ -115,5 +148,3 @@ export function MiddleGrid({ revealed, order, onShuffle, labels, highlights, blo
     </section>
   )
 }
-
-
