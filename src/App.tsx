@@ -19,7 +19,7 @@ function applyLayoutVars() {
   const gameMaxW = Math.min(vw - 2 * mainPad, 900)
 
   const outerChromeH =
-    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + selectionRowH * 1.1 + 4
+    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + selectionRowH * 1.15
 
   const toolbarH = 32
   const mainH = vh - headerHeight - 2 * mainPad
@@ -27,30 +27,32 @@ function applyLayoutVars() {
   const outerSectionH = gameH * 0.64
   const outerRowH = (outerSectionH - gridGap) / 2
 
-  // Size board from viewport height; cards shrink-wrap to board
-  const outerBoardByHeight = Math.floor(outerRowH - outerChromeH)
-  const outerBoardMax = Math.max(
-    150,
+  // Square cards first; board fills remaining space inside the card
+  const outerCardByHeight = Math.floor(outerRowH)
+  const outerCardByWidth = Math.floor((gameMaxW - gridGap) / 2)
+  const outerCardSize = Math.max(
+    200,
+    Math.min(outerCardByHeight, outerCardByWidth, Math.floor(vh * 0.28))
+  )
+
+  const outerBoardMax = Math.max(120, outerCardSize - outerChromeH)
+
+  const middleChromeH =
+    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + selectionRowH * 1.15
+  const middleSectionH = gameH * 0.36
+  const middleCardByHeight = Math.floor(middleSectionH)
+  const middleCardByWidth = Math.floor(gameMaxW)
+  const middleCardSize = Math.max(
+    220,
     Math.min(
-      outerBoardByHeight,
-      Math.floor(vh * 0.19),
-      Math.floor((gameMaxW - gridGap) / 2 - cardPad * 2 - 8)
+      middleCardByHeight,
+      middleCardByWidth,
+      Math.floor(outerCardSize * 1.08),
+      Math.floor(vh * 0.32)
     )
   )
 
-  const middleChromeH =
-    cardPad * 2 + h3Size + cellGap * 2 + selectionRowH + selectionRowH * 1.1 + 4
-  const middleSectionH = gameH * 0.36
-  const middleBoardByHeight = Math.floor(middleSectionH - middleChromeH)
-  const middleBoardMax = Math.max(
-    160,
-    Math.min(
-      middleBoardByHeight,
-      Math.floor(vh * 0.21),
-      Math.floor(outerBoardMax * 1.35),
-      gameMaxW - cardPad * 2 - 8
-    )
-  )
+  const middleBoardMax = Math.max(140, middleCardSize - middleChromeH)
 
   root.setProperty("--app-header-height", `${headerHeight}px`)
   root.setProperty("--app-header-pad", `${Math.round(headerHeight * 0.16)}px`)
@@ -63,6 +65,8 @@ function applyLayoutVars() {
   root.setProperty("--selection-row-h", `${selectionRowH}px`)
   root.setProperty("--selection-font", `${selectionFont}px`)
   root.setProperty("--game-max-w", `${gameMaxW}px`)
+  root.setProperty("--outer-card-size", `${outerCardSize}px`)
+  root.setProperty("--middle-card-size", `${middleCardSize}px`)
   root.setProperty("--outer-board-max", `${outerBoardMax}px`)
   root.setProperty("--middle-board-max", `${middleBoardMax}px`)
 }

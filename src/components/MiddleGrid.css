@@ -12,16 +12,17 @@
   display: flex;
   flex-direction: column;
   gap: var(--cell-gap, 6px);
-  width: fit-content;
+  width: var(--middle-card-size, 300px);
+  height: var(--middle-card-size, 300px);
+  aspect-ratio: 1 / 1;
   max-width: 100%;
-  height: auto;
   min-height: 0;
 }
 
 .middle-grid .grid-board-wrap,
 .middle-grid .selection-row,
 .middle-grid > .selection-output.answers {
-  width: var(--middle-board-max, 260px);
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -103,9 +104,8 @@
 }
 
 .middle-grid .selection-output.answers {
-  flex: 0 0 auto;
-  min-height: calc(var(--selection-row-h, 46px) * 1.05);
-  max-height: calc(var(--selection-row-h, 46px) * 1.35);
+  flex: 0 0 calc(var(--selection-row-h, 46px) * 1.15);
+  min-height: 0;
 }
 
 .final-word-section {

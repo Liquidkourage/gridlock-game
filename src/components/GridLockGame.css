@@ -11,7 +11,7 @@
 .game-grid {
   display: grid;
   grid-template-columns: repeat(2, max-content);
-  grid-template-rows: repeat(2, auto);
+  grid-template-rows: repeat(2, max-content);
   gap: var(--grid-gap, 12px);
   flex: 0 0 auto;
   width: 100%;
@@ -19,22 +19,30 @@
   align-content: start;
 }
 
-/* Board sets card width — not the other way around */
+/* Board sits in flex space inside square card */
 .grid-board-wrap {
-  flex: 0 0 auto;
-  width: fit-content;
-  margin: 0 auto calc(var(--cell-gap, 6px) * 0.5);
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 calc(var(--cell-gap, 6px) * 0.5);
 }
 
 .grid-board-wrap > .grid-blocks,
 .grid-board-wrap > .middle-answers-4x4 {
   width: var(--outer-board-max, 220px);
+  height: var(--outer-board-max, 220px);
+  max-width: 100%;
+  max-height: 100%;
   aspect-ratio: 1 / 1;
   flex: 0 0 auto;
 }
 
 .grid-board-wrap > .middle-answers-4x4 {
   width: var(--middle-board-max, 260px);
+  height: var(--middle-board-max, 260px);
 }
 
 /* Shared play board tray */

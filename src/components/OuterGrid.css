@@ -12,18 +12,18 @@
   flex-direction: column;
   align-items: stretch;
   overflow: hidden;
-  width: fit-content;
+  width: var(--outer-card-size, 280px);
+  height: var(--outer-card-size, 280px);
+  aspect-ratio: 1 / 1;
   max-width: 100%;
-  height: auto;
   justify-self: center;
   box-sizing: border-box;
 }
 
-/* Card width = board width; controls align to board, not column */
 .outer-grid .grid-board-wrap,
 .outer-grid .selection-row,
 .outer-grid > .selection-output.answers {
-  width: var(--outer-board-max, 220px);
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -136,9 +136,8 @@
 .selection-output.answers {
   display: grid;
   grid-template-rows: auto 1fr;
-  flex: 0 0 auto;
-  min-height: calc(var(--selection-row-h, 46px) * 1.05);
-  max-height: calc(var(--selection-row-h, 46px) * 1.35);
+  flex: 0 0 calc(var(--selection-row-h, 46px) * 1.15);
+  min-height: 0;
 }
 
 .selection-output.answers .selection-header {
@@ -214,7 +213,7 @@
   gap: var(--cell-gap, 6px);
   align-items: stretch;
   margin: 0 0 calc(var(--cell-gap, 6px) * 0.75);
-  flex: 0 0 auto;
+  flex: 0 0 var(--selection-row-h, 46px);
 }
 
 .selection-row .selection-output {
