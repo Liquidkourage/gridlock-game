@@ -18,7 +18,7 @@ function applyLayoutVars() {
   const selectionFont = Math.max(12, Math.round(selectionRowH * 0.44))
   const answersHeaderH = Math.max(13, Math.round(selectionFont * 1.05))
   const answerLineH = Math.max(18, Math.round(selectionRowH * 0.52))
-  const answersPaneH = answersHeaderH + answerLineH * 2 + cellGap + 4
+  const answersPaneH = answersHeaderH + answerLineH * 4 + cellGap * 3 + 4
   const gameMaxW = Math.min(vw - mainPad * 2, 1040)
 
   // Board-first: readable tiles trump fitting everything above the fold

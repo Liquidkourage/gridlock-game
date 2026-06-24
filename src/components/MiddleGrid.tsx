@@ -2,6 +2,7 @@ import React, { useCallback } from "react"
 import "./MiddleGrid.css"
 import { useTileDragSwap } from "./useTileDragSwap"
 import type { Answer } from "../types/game"
+import { orderByTierRows, tierIndex } from "../utils/tierOrder"
 
 interface Props {
   revealed: boolean[]
@@ -16,11 +17,6 @@ interface Props {
   lockedAnswers: Answer[]
   discoveredCategories: number[]
   gameComplete: boolean
-}
-
-function tierIndex(categorySetIndex: number, discovered: number[]): number {
-  const t = discovered.indexOf(categorySetIndex)
-  return t >= 0 ? t : Number.POSITIVE_INFINITY
 }
 
 export function MiddleGrid({
@@ -44,40 +40,20 @@ export function MiddleGrid({
   const { bindTile, tileClass, suppressClickRef } = useTileDragSwap(handleSwap)
 
   const totalCells = 16
-  const orderedDataIdxs = (() => {
-    const blockToTier = new Map<string, number>()
-    const blockToWithinGroup = new Map<string, number>()
-    const indexById = new Map<string, number>()
-    for (let disp = 0; disp < totalCells; disp++) {
-      const dataIdx = order[disp]
-      const id = blocks[dataIdx]?.id
-      if (id) indexById.set(id, disp)
-    }
-    lockedAnswers.forEach(ans => {
-      const tier = tierIndex(ans.categorySetIndex, discoveredCategories)
-      ans.blocks.forEach((b, i) => {
-        blockToTier.set(b.id, tier)
-        blockToWithinGroup.set(b.id, i)
-      })
-    })
-    const allIdxs = Array.from({ length: totalCells }, (_, i) => i)
-    allIdxs.sort((a, b) => {
-      const ida = blocks[a]?.id || ""
-      const idb = blocks[b]?.id || ""
-      const ga = blockToTier.has(ida) ? blockToTier.get(ida)! : Number.POSITIVE_INFINITY
-      const gb = blockToTier.has(idb) ? blockToTier.get(idb)! : Number.POSITIVE_INFINITY
-      if (ga !== gb) return ga - gb
-      if (ga !== Number.POSITIVE_INFINITY) {
-        const ia = blockToWithinGroup.get(ida) ?? 0
-        const ib = blockToWithinGroup.get(idb) ?? 0
-        return ia - ib
-      }
-      const ra = indexById.get(ida) ?? 0
-      const rb = indexById.get(idb) ?? 0
-      return ra - rb
-    })
-    return allIdxs
-  })()
+  const displayOrderById = new Map<string, number>()
+  for (let disp = 0; disp < totalCells; disp++) {
+    const id = blocks[order[disp]]?.id
+    if (id) displayOrderById.set(id, disp)
+  }
+  const orderedDataIdxs = orderByTierRows(
+    Array.from({ length: totalCells }, (_, dataIdx) => ({
+      id: blocks[dataIdx]?.id ?? `empty-${dataIdx}`,
+      dataIdx,
+    })),
+    lockedAnswers,
+    discoveredCategories,
+    item => displayOrderById.get(item.id) ?? item.dataIdx
+  ).map(item => item.dataIdx)
 
   const cells = orderedDataIdxs.map((dataIdx) => {
     const labelIdx = dataIdx < labels.length ? dataIdx : -1

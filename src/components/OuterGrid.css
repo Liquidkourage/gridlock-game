@@ -151,9 +151,9 @@
 .selection-output.answers .selection-body {
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: calc(var(--cell-gap, 6px) * 0.7);
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap: calc(var(--cell-gap, 6px) * 0.45);
   font-weight: 700;
   letter-spacing: 0.03em;
   align-content: stretch;
