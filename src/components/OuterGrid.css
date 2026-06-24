@@ -165,21 +165,24 @@
 .selection-output.answers .selection-body {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(4, var(--answer-line-h, 12px));
-  gap: var(--answers-row-gap, 2px);
+  grid-template-rows: repeat(4, minmax(var(--answer-line-h, 22px), auto));
+  gap: var(--answers-row-gap, 4px);
   font-weight: 700;
   letter-spacing: 0.03em;
-  padding: 1px 3px 2px;
+  padding: 3px 4px 4px;
   overflow: hidden;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-height: 0;
   align-content: start;
 }
 
 .selection-output.answers .locked-line {
-  border-radius: 3px;
-  padding: 0 2px;
-  height: var(--answer-line-h, 12px);
-  min-height: 0;
+  border-radius: 4px;
+  padding: 0 4px;
+  height: var(--answer-line-h, 22px);
+  min-height: var(--answer-line-h, 22px);
+  box-sizing: border-box;
+  line-height: 1;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -202,8 +205,8 @@
 .locked-line-empty {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.04);
-  height: var(--answer-line-h, 12px);
-  min-height: 0;
+  height: var(--answer-line-h, 22px);
+  min-height: var(--answer-line-h, 22px);
   opacity: 0.55;
 }
 

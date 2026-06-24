@@ -10,7 +10,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
   width: var(--category-card-width, 108px);
   height: var(--category-card-height, auto);
-  max-height: calc(var(--grid-gap, 124px) - 8px);
+  max-height: calc(var(--grid-gap, 140px) - 10px);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -28,15 +28,19 @@
 
 .category-rows {
   display: grid;
-  grid-template-rows: repeat(4, var(--category-line-h, 12px));
-  gap: calc(var(--cell-gap, 6px) * 0.25);
-  flex: 0 0 auto;
+  grid-template-rows: repeat(4, minmax(var(--category-line-h, 22px), auto));
+  gap: var(--category-row-gap, 4px);
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .category-slot {
   border-radius: 4px;
-  padding: 1px 4px;
-  min-height: var(--category-line-h, 14px);
+  padding: 0 4px;
+  height: var(--category-line-h, 22px);
+  min-height: var(--category-line-h, 22px);
+  box-sizing: border-box;
+  line-height: 1;
   text-align: center;
   font-size: var(--tile-font, 13px);
   font-weight: 800;
