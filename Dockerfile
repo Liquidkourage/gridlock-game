@@ -6,13 +6,11 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Serve
+# Serve static files on Railway's $PORT
 FROM node:22-alpine
 WORKDIR /app
+RUN npm install -g serve@14
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/vite.config.ts ./vite.config.ts
 ENV HOST=0.0.0.0
 EXPOSE 4173
-CMD ["sh", "-c", "npx vite preview --host 0.0.0.0 --port ${PORT:-4173} --strictPort false"]
+CMD ["sh", "-c", "serve -s dist -l tcp://0.0.0.0:${PORT:-4173}"]
