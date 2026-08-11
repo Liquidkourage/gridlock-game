@@ -75,7 +75,9 @@ export function OuterGrid({
                 disabled={locked || disableInteraction}
                 {...drag}
               >
-                {block.text}
+                <span className={`grid-block-text len-${Math.min(4, Math.max(1, block.text.length))}`}>
+                  {block.text}
+                </span>
               </button>
             )
           })}

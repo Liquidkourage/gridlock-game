@@ -16,7 +16,7 @@ function solveSquareLayout(vw: number, vh: number) {
   const estimateChrome = (card: number) => {
     const cardPad = Math.max(6, Math.round(card * 0.035))
     const cellGap = Math.max(3, Math.round(card * 0.018))
-    const tileFont = Math.max(9, Math.min(16, Math.round(card * 0.042)))
+    const tileFont = Math.max(8, Math.min(13, Math.round(card * 0.034)))
     const selectionRowH = Math.max(22, Math.min(32, Math.round(card * 0.09)))
     const answerLineH = tileFont + Math.max(6, Math.round(tileFont * 0.55))
     const answersRowGap = Math.max(2, Math.round(cellGap * 0.35))

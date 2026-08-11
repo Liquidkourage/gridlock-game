@@ -73,9 +73,9 @@
   border: none;
   border-radius: 6px;
   color: var(--tile-text);
-  font-size: var(--tile-font, 13px);
+  font-size: clamp(8px, 3.4cqi, var(--tile-font, 12px));
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   text-transform: uppercase;
   cursor: pointer;
   display: flex;
@@ -87,22 +87,12 @@
   min-width: 0;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  padding: clamp(4px, 8%, 10px);
-  line-height: 1.05;
+  box-sizing: border-box;
+  /* Real horizontal inset — % of tile width, floor so short tiles still breathe */
+  padding-block: max(3px, 6%);
+  padding-inline: max(7px, 16%);
+  line-height: 1;
   text-align: center;
-  /* Meme-style black outline for letter readability */
-  -webkit-text-stroke: 0.7px var(--tile-text-stroke);
-  paint-order: stroke fill;
-  text-shadow:
-    0 0 1px var(--tile-text-stroke),
-    1px 0 0 var(--tile-text-stroke),
-    -1px 0 0 var(--tile-text-stroke),
-    0 1px 0 var(--tile-text-stroke),
-    0 -1px 0 var(--tile-text-stroke),
-    1px 1px 0 var(--tile-text-stroke),
-    -1px -1px 0 var(--tile-text-stroke),
-    1px -1px 0 var(--tile-text-stroke),
-    -1px 1px 0 var(--tile-text-stroke);
   background: linear-gradient(
     180deg,
     var(--tile-face-top) 0%,
@@ -119,6 +109,38 @@
     filter 0.12s ease,
     background 0.12s ease,
     opacity 0.12s ease;
+}
+
+.grid-block-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+  line-height: 1;
+  /* Meme-style outline lives on the glyphs, not the padded button chrome */
+  -webkit-text-stroke: 0.55px var(--tile-text-stroke);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 1px var(--tile-text-stroke),
+    0.8px 0 0 var(--tile-text-stroke),
+    -0.8px 0 0 var(--tile-text-stroke),
+    0 0.8px 0 var(--tile-text-stroke),
+    0 -0.8px 0 var(--tile-text-stroke),
+    0.8px 0.8px 0 var(--tile-text-stroke),
+    -0.8px -0.8px 0 var(--tile-text-stroke),
+    0.8px -0.8px 0 var(--tile-text-stroke),
+    -0.8px 0.8px 0 var(--tile-text-stroke);
+}
+
+.grid-block-text.len-3 {
+  font-size: 0.9em;
+  letter-spacing: -0.02em;
+}
+
+.grid-block-text.len-4 {
+  font-size: 0.78em;
+  letter-spacing: -0.04em;
 }
 
 .grid-block[draggable="true"] {
