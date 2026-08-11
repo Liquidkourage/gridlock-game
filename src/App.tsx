@@ -3,6 +3,7 @@ import "./App.css"
 import { GridLockGame } from "./components/GridLockGame"
 import { CreatorPage } from "./pages/CreatorPage"
 import { navigate, usePathname } from "./router"
+import { useTheme } from "./theme"
 
 /** Largest integer square card that fits a 2×2 + center gap in the play area. */
 function solveSquareLayout(vw: number, vh: number) {
@@ -165,6 +166,7 @@ function applyLayoutVars() {
 
 export default function App() {
   const pathname = usePathname()
+  const [theme, toggleTheme] = useTheme()
 
   useLayoutEffect(() => {
     applyLayoutVars()
@@ -189,20 +191,27 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="app-header-inner">
+          <div className="app-header-actions">
+            <button type="button" className="theme-toggle" onClick={toggleTheme} title="Toggle light/dark">
+              {theme === "dark" ? "Light" : "Dark"}
+            </button>
+          </div>
           <div className="app-header-brand">
             <h1>GridLock</h1>
             <p>Find the links. Lock the grid.</p>
           </div>
-          <a
-            className="app-header-link"
-            href="/creator"
-            onClick={e => {
-              e.preventDefault()
-              navigate("/creator")
-            }}
-          >
-            Set Daily Puzzle
-          </a>
+          <div className="app-header-end">
+            <a
+              className="app-header-link"
+              href="/creator"
+              onClick={e => {
+                e.preventDefault()
+                navigate("/creator")
+              }}
+            >
+              Set Daily Puzzle
+            </a>
+          </div>
         </div>
       </header>
       <main className="app-main">

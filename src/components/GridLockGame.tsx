@@ -63,7 +63,8 @@ export function GridLockGame() {
   }, [])
 
   function chunkWordIntoFour(word: string, seedStr: string): string[] {
-    const w = (word || "").trim()
+    // Strip punctuation so "High-sticking" → HIGHSTICKING (12 letters), not 13 chars
+    const w = (word || "").toUpperCase().replace(/[^A-Z0-9]/g, "")
     const L = w.length
     if (L <= 0) return ["", "", "", ""]
     const rand = rng(seedFromString(seedStr))

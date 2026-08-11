@@ -4,8 +4,8 @@
   max-height: 100vh;
   max-height: 100dvh;
   background:
-    radial-gradient(ellipse 90% 55% at 50% -15%, rgba(160, 195, 90, 0.1), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(76, 175, 80, 0.04), transparent 50%),
+    radial-gradient(ellipse 90% 55% at 50% -15%, var(--glow-top), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, var(--glow-bot), transparent 50%),
     var(--bg-deep);
   overflow: hidden;
   display: flex;
@@ -16,8 +16,8 @@
   padding: var(--app-header-pad, 10px) 16px;
   border-bottom: 1px solid transparent;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 100%);
+  box-shadow: 0 1px 0 var(--bg-panel-edge);
   height: var(--app-header-height, 52px);
   flex: 0 0 auto;
   display: flex;
@@ -34,6 +34,14 @@
   gap: 12px;
 }
 
+.app-header-actions {
+  grid-column: 1;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .app-header-brand {
   grid-column: 2;
   text-align: center;
@@ -46,7 +54,7 @@
   margin: 0;
   letter-spacing: -0.03em;
   line-height: 1.05;
-  text-shadow: 0 1px 18px rgba(160, 195, 90, 0.15);
+  text-shadow: 0 1px 18px var(--glow-top);
 }
 
 .app-header-brand p {
@@ -58,25 +66,53 @@
   font-weight: 500;
 }
 
-.app-header-link {
+.app-header-end {
   grid-column: 3;
   justify-self: end;
-  color: #dfffe3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-header-link {
+  color: var(--header-link-text);
   text-decoration: none;
   font-size: clamp(0.72rem, 1.5vh, 0.85rem);
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(123, 212, 123, 0.35);
-  background: linear-gradient(180deg, #355b35 0%, #2b4a2b 100%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--header-link-edge);
+  background: linear-gradient(180deg, var(--header-link-top) 0%, var(--header-link-bot) 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: filter 0.12s ease, transform 0.12s ease;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .app-header-link:hover {
   filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.theme-toggle {
+  appearance: none;
+  background: var(--bg-panel);
+  border: 1px solid var(--bg-panel-edge);
+  color: var(--text-primary);
+  font-size: clamp(0.72rem, 1.5vh, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: filter 0.12s ease, transform 0.12s ease;
+  white-space: nowrap;
+}
+
+.theme-toggle:hover {
+  filter: brightness(1.06);
   transform: translateY(-1px);
 }
 

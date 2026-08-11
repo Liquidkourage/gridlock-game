@@ -8,6 +8,7 @@
 .grid-block.locked.cat-0 {
   background: linear-gradient(180deg, #b8825a 0%, #966341 52%, #7a4f32 100%);
   color: #fff5eb;
+  -webkit-text-stroke-color: #3a2410;
   box-shadow:
     0 2px 0 #4a3520,
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
@@ -24,6 +25,7 @@
 .grid-block.locked.cat-1 {
   background: linear-gradient(180deg, #a8b2bc 0%, #88929c 52%, #6e7780 100%);
   color: #f8fafc;
+  -webkit-text-stroke-color: #2a3036;
   box-shadow:
     0 2px 0 #3d4348,
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -40,6 +42,7 @@
 .grid-block.locked.cat-2 {
   background: linear-gradient(180deg, #d9b84a 0%, #b89832 52%, #967a22 100%);
   color: #fffef5;
+  -webkit-text-stroke-color: #4a3a10;
   box-shadow:
     0 2px 0 #5c4a15,
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -56,6 +59,7 @@
 .grid-block.locked.cat-3 {
   background: linear-gradient(180deg, #c8d4de 0%, #a8b4be 52%, #88929a 100%);
   color: #1a2030;
+  -webkit-text-stroke-color: #eef2f6;
   box-shadow:
     0 2px 0 #4a5560,
     inset 0 1px 0 rgba(255, 255, 255, 0.28);

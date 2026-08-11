@@ -77,7 +77,8 @@ export function shuffleDeterministic<T>(arr: T[], seedStr: string): T[] {
 }
 
 function normalizeToken(s: string): string {
-  return (s || "").replace(/\s+/g, "").toUpperCase()
+  // Letters/digits only — punctuation (hyphens, apostrophes, etc.) never appear on tiles
+  return (s || "").toUpperCase().replace(/[^A-Z0-9]/g, "")
 }
 
 function normalizePuzzle(p: Puzzle): Puzzle {
