@@ -12,8 +12,8 @@ export function CreatorPage() {
             ← Play
           </button>
           <div className="creator-header-text">
-            <h1>Puzzle Creator</h1>
-            <p>Build a custom GridLock puzzle</p>
+            <h1>Daily Puzzle Creator</h1>
+            <p>Set GridLock puzzles by date</p>
           </div>
         </div>
       </header>

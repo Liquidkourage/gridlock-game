@@ -16,11 +16,35 @@ export async function loadPuzzle(puzzleId: string): Promise<Puzzle> {
     if (!raw) throw new Error("No pasted puzzle in sessionStorage")
     return normalizePuzzle(JSON.parse(raw) as Puzzle)
   }
+
+  // Daily / custom puzzles saved from the creator
+  try {
+    const local = localStorage.getItem(`puzzle:${puzzleId}`)
+    if (local) return normalizePuzzle(JSON.parse(local) as Puzzle)
+  } catch {}
+
   const res = await fetch(`/puzzles/${puzzleId}.json`, { cache: "no-store" })
   if (!res.ok) throw new Error(`Failed to load puzzle ${puzzleId}`)
   const data = (await res.json()) as Puzzle
   return normalizePuzzle(data)
 }
+
+export function saveDailyPuzzle(puzzle: Puzzle): void {
+  const id = (puzzle.puzzleId || puzzle.date || "").trim()
+  if (!id) throw new Error("Puzzle needs an id/date")
+  localStorage.setItem(`puzzle:${id}`, JSON.stringify(puzzle))
+  sessionStorage.setItem("puzzle:_paste", JSON.stringify(puzzle))
+}
+
+export function listSavedDailyPuzzleIds(): string[] {
+  const ids: string[] = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    if (key?.startsWith("puzzle:")) ids.push(key.slice("puzzle:".length))
+  }
+  return ids.sort().reverse()
+}
+
 
 // Simple deterministic RNG (Mulberry32)
 export function rng(seed: number) {

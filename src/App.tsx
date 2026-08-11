@@ -2,7 +2,7 @@ import React, { useLayoutEffect } from "react"
 import "./App.css"
 import { GridLockGame } from "./components/GridLockGame"
 import { CreatorPage } from "./pages/CreatorPage"
-import { usePathname } from "./router"
+import { navigate, usePathname } from "./router"
 
 /** Largest integer square card that fits a 2×2 + center gap in the play area. */
 function solveSquareLayout(vw: number, vh: number) {
@@ -31,10 +31,19 @@ function solveSquareLayout(vw: number, vh: number) {
       Math.round(cellGap * 0.3) +
       answersPaneH
 
-    const categoryPad = Math.max(4, Math.round(cardPad * 0.5))
-    const categoryW = Math.max(72, Math.min(128, Math.round(card * 0.34)))
-    const categoryH = categoryPad * 2 + labelH + answerLineH * 4 + answersRowGap * 3 + 2
-    const gridGap = Math.max(categoryW + 10, categoryH + 8, Math.round(card * 0.22))
+    // Center gap is intentional space: Categories fills nearly all of it
+    const gridGap = Math.max(100, Math.round(card * 0.48))
+    const categoryPad = Math.max(6, Math.round(gridGap * 0.06))
+    const categorySize = Math.max(88, gridGap - 14)
+    const categoryW = categorySize
+    const categoryH = categorySize
+    const categoryInner = categorySize - categoryPad * 2
+    const categoryLabelH = Math.round(tileFont * 1.2) + 4
+    const categoryRowGap = Math.max(3, Math.round(cellGap * 0.45))
+    const categoryLineH = Math.max(
+      answerLineH,
+      Math.floor((categoryInner - categoryLabelH - categoryRowGap * 3 - 4) / 4)
+    )
 
     return {
       cardPad,
@@ -49,6 +58,8 @@ function solveSquareLayout(vw: number, vh: number) {
       categoryPad,
       categoryW,
       categoryH,
+      categoryLineH,
+      categoryRowGap,
       gridGap,
     }
   }
@@ -117,8 +128,8 @@ function solveSquareLayout(vw: number, vh: number) {
     answersPaneH: final.answersPaneH,
     categoryCardWidth: final.categoryW,
     categoryCardHeight: final.categoryH,
-    categoryLineH: final.answerLineH,
-    categoryRowGap: final.answersRowGap,
+    categoryLineH: final.categoryLineH,
+    categoryRowGap: final.categoryRowGap,
   }
 }
 
@@ -177,8 +188,22 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>GridLock</h1>
-        <p>Find the links. Lock the grid.</p>
+        <div className="app-header-inner">
+          <div className="app-header-brand">
+            <h1>GridLock</h1>
+            <p>Find the links. Lock the grid.</p>
+          </div>
+          <a
+            className="app-header-link"
+            href="/creator"
+            onClick={e => {
+              e.preventDefault()
+              navigate("/creator")
+            }}
+          >
+            Set Daily Puzzle
+          </a>
+        </div>
       </header>
       <main className="app-main">
         <GridLockGame />

@@ -75,3 +75,31 @@
   cursor: pointer;
   font-weight: 600;
 }
+
+.creator-main .puzzle-loader .day-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.creator-main .puzzle-loader .day-chip:hover {
+  color: var(--text-primary);
+  border-color: rgba(160, 195, 90, 0.4);
+}
+
+.creator-app {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.creator-app .creator-main {
+  overflow-y: auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
