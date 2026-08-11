@@ -73,9 +73,9 @@
   border: none;
   border-radius: 6px;
   color: var(--tile-text);
-  font-size: clamp(8px, 3.4cqi, var(--tile-font, 12px));
+  font-size: clamp(11px, 5.5cqi, var(--tile-font, 16px));
   font-weight: 800;
-  letter-spacing: 0;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
   cursor: pointer;
   display: flex;
@@ -88,9 +88,9 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   box-sizing: border-box;
-  /* Real horizontal inset — % of tile width, floor so short tiles still breathe */
-  padding-block: max(3px, 6%);
-  padding-inline: max(7px, 16%);
+  /* Modest inset — enough to clear edges, room for larger type */
+  padding-block: max(2px, 4%);
+  padding-inline: max(5px, 9%);
   line-height: 1;
   text-align: center;
   background: linear-gradient(
@@ -118,29 +118,29 @@
   text-overflow: clip;
   white-space: nowrap;
   line-height: 1;
-  /* Meme-style outline lives on the glyphs, not the padded button chrome */
-  -webkit-text-stroke: 0.55px var(--tile-text-stroke);
+  /* Meme-style outline — scaled for larger glyphs */
+  -webkit-text-stroke: 0.7px var(--tile-text-stroke);
   paint-order: stroke fill;
   text-shadow:
     0 0 1px var(--tile-text-stroke),
-    0.8px 0 0 var(--tile-text-stroke),
-    -0.8px 0 0 var(--tile-text-stroke),
-    0 0.8px 0 var(--tile-text-stroke),
-    0 -0.8px 0 var(--tile-text-stroke),
-    0.8px 0.8px 0 var(--tile-text-stroke),
-    -0.8px -0.8px 0 var(--tile-text-stroke),
-    0.8px -0.8px 0 var(--tile-text-stroke),
-    -0.8px 0.8px 0 var(--tile-text-stroke);
+    1px 0 0 var(--tile-text-stroke),
+    -1px 0 0 var(--tile-text-stroke),
+    0 1px 0 var(--tile-text-stroke),
+    0 -1px 0 var(--tile-text-stroke),
+    1px 1px 0 var(--tile-text-stroke),
+    -1px -1px 0 var(--tile-text-stroke),
+    1px -1px 0 var(--tile-text-stroke),
+    -1px 1px 0 var(--tile-text-stroke);
 }
 
 .grid-block-text.len-3 {
-  font-size: 0.9em;
-  letter-spacing: -0.02em;
+  font-size: 0.94em;
+  letter-spacing: 0;
 }
 
 .grid-block-text.len-4 {
-  font-size: 0.78em;
-  letter-spacing: -0.04em;
+  font-size: 0.86em;
+  letter-spacing: -0.02em;
 }
 
 .grid-block[draggable="true"] {
