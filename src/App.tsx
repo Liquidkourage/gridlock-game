@@ -28,11 +28,11 @@ function solvePlayLayout(vw: number, vh: number) {
     const cellGap = Math.max(3, Math.min(8, Math.round(board * 0.022)))
     const tileFont = Math.max(12, Math.min(22, Math.round(board * 0.095)))
     const selectionRowH = Math.max(24, Math.min(34, Math.round(board * 0.1)))
-    const answerLineH = Math.max(16, Math.min(24, Math.round(tileFont * 1.05)))
-    const answersRowGap = Math.max(3, Math.round(cellGap * 0.4))
+    const answerLineH = Math.max(22, Math.min(32, Math.round(tileFont * 1.45)))
+    const answersRowGap = Math.max(4, Math.round(cellGap * 0.5))
     const labelH = Math.max(12, Math.round(tileFont * 0.85))
-    // Answers are 2×2 — only two rows of chrome height
-    const answersPaneH = labelH + answerLineH * 2 + answersRowGap + 6
+    // Answers are 2×2 — two taller rows
+    const answersPaneH = labelH + answerLineH * 2 + answersRowGap + 8
     const sectionGap = Math.max(2, Math.round(cellGap * 0.45))
     const chromeH =
       labelH +

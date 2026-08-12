@@ -181,10 +181,10 @@
 }
 
 .selection-output.answers .locked-line {
-  border-radius: 4px;
-  padding: 0 4px;
-  height: var(--answer-line-h, 22px);
-  min-height: var(--answer-line-h, 22px);
+  border-radius: 5px;
+  padding: 0 6px;
+  height: var(--answer-line-h, 28px);
+  min-height: var(--answer-line-h, 28px);
   box-sizing: border-box;
   line-height: 1;
   text-align: center;
@@ -209,8 +209,8 @@
 .locked-line-empty {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.04);
-  height: var(--answer-line-h, 22px);
-  min-height: var(--answer-line-h, 22px);
+  height: var(--answer-line-h, 28px);
+  min-height: var(--answer-line-h, 28px);
   opacity: 0.55;
 }
 
