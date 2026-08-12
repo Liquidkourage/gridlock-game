@@ -37,19 +37,20 @@
 
 .ambient-tray {
   position: absolute;
-  border-radius: 16px;
+  border-radius: 18px;
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.035) 0%, transparent 48%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.03) 0%, transparent 48%),
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--board-tray-top) 78%, transparent) 0%,
-      color-mix(in srgb, var(--board-tray-bot) 82%, transparent) 100%
+      color-mix(in srgb, var(--board-tray-top) 72%, transparent) 0%,
+      color-mix(in srgb, var(--board-tray-bot) 78%, transparent) 100%
     );
-  border: 1px solid color-mix(in srgb, var(--cat-green) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mint) 16%, transparent);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -1px 12px rgba(0, 0, 0, 0.22),
-    0 8px 24px rgba(0, 0, 0, 0.16);
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 14px rgba(0, 0, 0, 0.28),
+    0 8px 28px rgba(0, 0, 0, 0.2),
+    0 0 24px color-mix(in srgb, var(--mint) 8%, transparent);
 }
 
 .ambient-tray-h {
@@ -77,58 +78,76 @@
 .ambient-rails::after {
   content: "";
   position: absolute;
-  background: linear-gradient(
+  background-image: repeating-linear-gradient(
     90deg,
-    transparent 0%,
-    color-mix(in srgb, var(--cat-green) 14%, transparent) 18%,
-    color-mix(in srgb, var(--cat-green) 36%, transparent) 50%,
-    color-mix(in srgb, var(--cat-green) 14%, transparent) 82%,
-    transparent 100%
+    transparent 0,
+    transparent 5px,
+    color-mix(in srgb, var(--mint) 28%, transparent) 5px,
+    color-mix(in srgb, var(--mint) 28%, transparent) 7px
   );
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
-/* Horizontal guideline rail */
+/* Horizontal schematic rail (dotted) */
 .ambient-rails::before {
   left: 4%;
   right: 4%;
   top: 50%;
   height: 1px;
   transform: translateY(-50%);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 6px,
+    color-mix(in srgb, var(--mint) 32%, transparent) 6px,
+    color-mix(in srgb, var(--mint) 32%, transparent) 8px
+  );
+  box-shadow: 0 0 8px color-mix(in srgb, var(--mint) 20%, transparent);
 }
 
-/* Vertical guideline rail */
+/* Vertical schematic rail (dotted) */
 .ambient-rails::after {
   top: 4%;
   bottom: 4%;
   left: 50%;
   width: 1px;
   transform: translateX(-50%);
-  background: linear-gradient(
+  background-image: repeating-linear-gradient(
     180deg,
-    transparent 0%,
-    color-mix(in srgb, var(--cat-green) 14%, transparent) 18%,
-    color-mix(in srgb, var(--cat-green) 36%, transparent) 50%,
-    color-mix(in srgb, var(--cat-green) 14%, transparent) 82%,
-    transparent 100%
+    transparent 0,
+    transparent 6px,
+    color-mix(in srgb, var(--mint) 32%, transparent) 6px,
+    color-mix(in srgb, var(--mint) 32%, transparent) 8px
   );
+  box-shadow: 0 0 8px color-mix(in srgb, var(--mint) 20%, transparent);
+}
+
+/* Glowing nodes at cross + midpoints */
+.ambient-rails {
+  background:
+    radial-gradient(circle, var(--mint) 1.5px, transparent 2.2px) 50% 50% / 100% 100% no-repeat,
+    radial-gradient(circle, color-mix(in srgb, var(--mint) 70%, transparent) 1.2px, transparent 2px) 20% 50% / 100% 100% no-repeat,
+    radial-gradient(circle, color-mix(in srgb, var(--mint) 70%, transparent) 1.2px, transparent 2px) 80% 50% / 100% 100% no-repeat,
+    radial-gradient(circle, color-mix(in srgb, var(--mint) 70%, transparent) 1.2px, transparent 2px) 50% 18% / 100% 100% no-repeat,
+    radial-gradient(circle, color-mix(in srgb, var(--mint) 70%, transparent) 1.2px, transparent 2px) 50% 82% / 100% 100% no-repeat;
+  filter: drop-shadow(0 0 4px var(--mint-glow));
 }
 
 .ambient-glow {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(70%, calc(var(--grid-gap, 220px) * 1.55));
-  height: min(70%, calc(var(--grid-gap, 220px) * 1.55));
+  width: min(75%, calc(var(--grid-gap, 220px) * 1.7));
+  height: min(75%, calc(var(--grid-gap, 220px) * 1.7));
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 45%,
-    color-mix(in srgb, var(--cat-green) 22%, transparent) 0%,
-    color-mix(in srgb, var(--cat-green) 8%, transparent) 38%,
-    transparent 68%
+    color-mix(in srgb, var(--mint) 28%, transparent) 0%,
+    color-mix(in srgb, var(--mint) 10%, transparent) 40%,
+    transparent 70%
   );
-  filter: blur(2px);
+  filter: blur(4px);
 }
 
 .play-cell-categories {
@@ -150,23 +169,25 @@
   flex-direction: column;
   align-items: center;
   gap: var(--hub-stack-gap, 8px);
-  padding: 6px;
-  border-radius: 16px;
+  padding: 8px;
+  border-radius: 18px;
   background:
     radial-gradient(
-      ellipse 80% 70% at 50% 40%,
-      color-mix(in srgb, var(--cat-green) 12%, transparent) 0%,
-      transparent 62%
+      ellipse 80% 70% at 50% 35%,
+      color-mix(in srgb, var(--mint) 14%, transparent) 0%,
+      transparent 60%
     ),
     linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--bg-panel) 70%, transparent) 0%,
-      color-mix(in srgb, var(--tray-bg) 45%, transparent) 100%
+      165deg,
+      color-mix(in srgb, var(--bg-panel) 78%, transparent) 0%,
+      color-mix(in srgb, var(--tray-bg) 55%, transparent) 100%
     );
+  border: 1px solid color-mix(in srgb, var(--mint) 18%, transparent);
   box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.22),
-    0 0 0 1px color-mix(in srgb, var(--cat-green) 14%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 14px 36px rgba(0, 0, 0, 0.35),
+    0 0 32px color-mix(in srgb, var(--mint) 10%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 12px rgba(0, 0, 0, 0.25);
 }
 
 .hub-progress {
@@ -181,29 +202,31 @@
   height: var(--hub-meta-h, 26px);
   padding: 0 10px;
   box-sizing: border-box;
-  border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--cat-green) 28%, transparent);
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--mint) 26%, transparent);
   background:
-    linear-gradient(165deg, color-mix(in srgb, var(--cat-green) 12%, transparent) 0%, transparent 55%),
+    linear-gradient(165deg, color-mix(in srgb, var(--mint) 10%, transparent) 0%, transparent 55%),
     linear-gradient(180deg, var(--card-top) 0%, var(--card-bot) 100%);
   box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 4px 16px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 var(--glass-highlight);
   color: var(--text-muted);
-  font-size: clamp(10px, calc(var(--tile-font, 13px) * 0.82), 13px);
-  font-weight: 650;
-  letter-spacing: 0.03em;
+  font-family: var(--font-display);
+  font-size: clamp(10px, calc(var(--tile-font, 13px) * 0.78), 12px);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
 }
 
 .hub-progress-stat {
   color: var(--text-primary);
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .hub-progress-sep {
-  color: color-mix(in srgb, var(--cat-green) 70%, transparent);
+  color: color-mix(in srgb, var(--mint) 75%, transparent);
   font-weight: 700;
 }
 
@@ -290,7 +313,7 @@ html[data-layout="mobile"] .outer-grid {
   flex: 0 0 auto;
 }
 
-/* Shared play board tray */
+/* Shared play board tray — recessed neumorphic well */
 .grid-blocks {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -298,27 +321,30 @@ html[data-layout="mobile"] .outer-grid {
   gap: var(--cell-gap, 5px);
   padding: calc(var(--cell-gap, 5px) + 3px);
   background:
-    linear-gradient(165deg, rgba(255, 255, 255, 0.04) 0%, transparent 42%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.035) 0%, transparent 42%),
     linear-gradient(180deg, var(--board-tray-top) 0%, var(--board-tray-bot) 100%);
   border: 1px solid var(--board-tray-edge);
-  border-radius: 12px;
+  border-radius: 14px;
   box-shadow:
-    inset 0 2px 14px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 10px 28px rgba(0, 0, 0, 0.25);
+    inset 0 3px 16px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 0 0 1px color-mix(in srgb, var(--mint) 6%, transparent),
+    0 10px 28px rgba(0, 0, 0, 0.3);
   container-type: inline-size;
 }
 
-/* Shared tile styling */
+/* Shared tile styling — soft recessed bevel */
 .grid-block {
   appearance: none;
   -webkit-appearance: none;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   color: var(--tile-text);
+  font-family: var(--font-display);
   font-size: clamp(13px, 6.4cqi, var(--tile-font, 20px));
-  font-weight: 800;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   cursor: pointer;
   display: flex;
@@ -331,21 +357,21 @@ html[data-layout="mobile"] .outer-grid {
   aspect-ratio: 1 / 1;
   overflow: hidden;
   box-sizing: border-box;
-  /* Modest inset — letters clear edges without starving type */
   padding-block: max(2px, 5%);
   padding-inline: max(4px, 7%);
   line-height: 1;
   text-align: center;
   background: linear-gradient(
-    180deg,
+    165deg,
     var(--tile-face-top) 0%,
     var(--tile-face-mid) 48%,
     var(--tile-face-bot) 100%
   );
   box-shadow:
     0 2px 0 var(--tile-face-shadow),
-    0 4px 10px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    0 4px 12px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
   transition:
     transform 0.12s ease,
     box-shadow 0.12s ease,
@@ -361,7 +387,6 @@ html[data-layout="mobile"] .outer-grid {
   text-overflow: clip;
   white-space: nowrap;
   line-height: 1;
-  /* Meme-style outline — scaled for larger glyphs */
   -webkit-text-stroke: 0.7px var(--tile-text-stroke);
   paint-order: stroke fill;
   text-shadow:
@@ -403,19 +428,19 @@ html[data-layout="mobile"] .outer-grid {
 
 .grid-block.drop-target {
   box-shadow:
-    0 0 0 2px #9be59b,
-    0 0 14px rgba(123, 212, 123, 0.45),
+    0 0 0 2px var(--mint),
+    0 0 16px var(--mint-glow),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: scale(1.03);
 }
 
 .grid-block:hover:not(:disabled):not(.locked) {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
   transform: translateY(-1px);
   box-shadow:
     0 3px 0 var(--tile-face-shadow),
-    0 6px 14px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    0 6px 16px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .grid-block:active:not(:disabled):not(.locked) {
@@ -423,17 +448,23 @@ html[data-layout="mobile"] .outer-grid {
   box-shadow:
     0 1px 0 var(--tile-face-shadow),
     0 2px 6px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .grid-block.selected {
-  background: linear-gradient(180deg, #4f8f52 0%, #3d7340 52%, #326633 100%);
-  color: #f3fff4;
+  background: linear-gradient(165deg, #1ad99a 0%, #00c988 48%, #00a872 100%);
+  color: #04140e;
   box-shadow:
-    0 2px 0 #285528,
-    0 0 0 2px rgba(123, 212, 123, 0.55),
-    0 6px 16px rgba(46, 125, 50, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 2px 0 #067a52,
+    0 0 0 2px color-mix(in srgb, var(--mint) 70%, transparent),
+    0 0 18px var(--mint-glow),
+    0 6px 16px rgba(0, 200, 140, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.grid-block.selected .grid-block-text {
+  -webkit-text-stroke-color: transparent;
+  text-shadow: none;
 }
 
 .grid-block.locked {
@@ -445,6 +476,9 @@ html[data-layout="mobile"] .outer-grid {
   text-align: center;
   padding: 2rem;
   color: var(--text-muted);
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .game-complete {
@@ -464,4 +498,3 @@ html[data-layout="mobile"] .outer-grid {
   color: var(--text-muted);
   font-size: 1rem;
 }
-

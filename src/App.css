@@ -3,25 +3,41 @@
   height: 100dvh;
   max-height: 100vh;
   max-height: 100dvh;
+  /* Soft center mint glow + schematic dotted grid with intersection nodes */
   background:
-    radial-gradient(ellipse 90% 55% at 50% -15%, var(--glow-top), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 50% 110%, var(--glow-bot), transparent 50%),
-    var(--bg-deep);
+    radial-gradient(ellipse 55% 48% at 50% 48%, var(--glow-top), transparent 62%),
+    radial-gradient(ellipse 90% 50% at 50% -12%, color-mix(in srgb, var(--mint) 10%, transparent), transparent 55%),
+    radial-gradient(ellipse 55% 35% at 50% 108%, var(--glow-bot), transparent 50%),
+    radial-gradient(circle, var(--schematic-node) 1.1px, transparent 1.35px),
+    linear-gradient(var(--schematic-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--schematic-line) 1px, transparent 1px),
+    linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-deep) 100%);
+  background-size:
+    auto,
+    auto,
+    auto,
+    48px 48px,
+    48px 48px,
+    48px 48px,
+    auto;
+  background-position: center;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .app-header {
   padding: var(--app-header-pad, 10px) 16px;
   border-bottom: 1px solid transparent;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 100%);
-  box-shadow: 0 1px 0 var(--bg-panel-edge);
+  background: transparent;
+  box-shadow: none;
   height: var(--app-header-height, 52px);
   flex: 0 0 auto;
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .app-header-inner {
@@ -48,22 +64,29 @@
 }
 
 .app-header-brand h1 {
+  font-family: var(--font-display);
   font-size: var(--h1-size, 26px);
-  font-weight: 800;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: var(--mint);
   margin: 0;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
   line-height: 1.05;
-  text-shadow: 0 1px 18px var(--glow-top);
+  text-shadow:
+    0 0 12px var(--mint-glow),
+    0 0 28px color-mix(in srgb, var(--mint) 35%, transparent),
+    0 0 48px color-mix(in srgb, var(--mint) 18%, transparent);
 }
 
 .app-header-brand p {
   color: var(--text-muted);
-  font-size: clamp(0.72rem, 1.5vh, 0.88rem);
-  margin-top: 2px;
-  letter-spacing: 0.06em;
+  font-size: clamp(0.65rem, 1.4vh, 0.78rem);
+  margin-top: 4px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 500;
+  opacity: 0.85;
 }
 
 .app-header-end {
@@ -77,42 +100,71 @@
 .app-header-link {
   color: var(--header-link-text);
   text-decoration: none;
-  font-size: clamp(0.72rem, 1.5vh, 0.85rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 6px 12px;
-  border-radius: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(0.68rem, 1.4vh, 0.8rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 999px;
   border: 1px solid var(--header-link-edge);
-  background: linear-gradient(180deg, var(--header-link-top) 0%, var(--header-link-bot) 100%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: filter 0.12s ease, transform 0.12s ease;
+  background:
+    linear-gradient(165deg, var(--glass-highlight) 0%, transparent 45%),
+    linear-gradient(180deg, var(--header-link-top) 0%, var(--header-link-bot) 100%);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: filter 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
   white-space: nowrap;
   cursor: pointer;
 }
 
 .app-header-link:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.1);
   transform: translateY(-1px);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.32),
+    0 0 16px color-mix(in srgb, var(--mint) 25%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
+/* Recessed circular control — matches mock gear/stats wells */
 .theme-toggle {
   appearance: none;
-  background: var(--bg-panel);
-  border: 1px solid var(--bg-panel-edge);
-  color: var(--text-primary);
-  font-size: clamp(0.72rem, 1.5vh, 0.85rem);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  padding: 6px 12px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-muted);
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  transition: filter 0.12s ease, transform 0.12s ease;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 40%, var(--bg-panel) 0%, var(--tray-bg) 100%);
+  border: 1px solid color-mix(in srgb, var(--mint) 18%, transparent);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    inset 0 2px 6px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 var(--glass-highlight);
+  transition: color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-toggle:hover {
-  filter: brightness(1.06);
+  color: var(--mint);
+  border-color: color-mix(in srgb, var(--mint) 42%, transparent);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.38),
+    0 0 12px color-mix(in srgb, var(--mint) 22%, transparent),
+    inset 0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 var(--glass-highlight);
   transform: translateY(-1px);
 }
 
@@ -127,4 +179,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+html[data-layout="mobile"] .app {
+  background-size:
+    auto,
+    auto,
+    auto,
+    56px 56px,
+    56px 56px,
+    56px 56px,
+    auto;
+}
+
+html[data-layout="mobile"] .app-header-brand p {
+  display: none;
+}
+
+html[data-layout="mobile"] .theme-toggle {
+  width: 34px;
+  height: 34px;
+  font-size: 0.58rem;
+}
+
+html[data-layout="mobile"] .app-header-link {
+  padding: 6px 10px;
+  font-size: 0.62rem;
 }

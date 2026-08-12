@@ -199,13 +199,12 @@ export default function App() {
       <header className="app-header">
         <div className="app-header-inner">
           <div className="app-header-actions">
-            <button type="button" className="theme-toggle" onClick={toggleTheme} title="Toggle light/dark">
-              {theme === "dark" ? "Light" : "Dark"}
+            <button type="button" className="theme-toggle" onClick={toggleTheme} title="Toggle light/dark" aria-label="Toggle light/dark">
+              {theme === "dark" ? "☀" : "☾"}
             </button>
           </div>
           <div className="app-header-brand">
             <h1>GridLock</h1>
-            <p>Find the links. Lock the grid.</p>
           </div>
           <div className="app-header-end">
             <a

@@ -17,12 +17,16 @@
 }
 
 .creator-header-text h1 {
+  font-family: var(--font-display);
   font-size: var(--h1-size, 28px);
-  font-weight: 800;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: var(--mint);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.22em;
+  text-indent: 0.1em;
+  text-transform: uppercase;
   line-height: 1.1;
+  text-shadow: 0 0 16px color-mix(in srgb, var(--mint) 40%, transparent);
 }
 
 .creator-header-text p {
@@ -67,13 +71,15 @@
 }
 
 .creator-main .puzzle-loader button {
-  background: linear-gradient(180deg, #355b35 0%, #2b4a2b 100%);
-  color: #dfffe3;
-  border: 1px solid rgba(123, 212, 123, 0.35);
+  background: linear-gradient(180deg, var(--header-link-top) 0%, var(--header-link-bot) 100%);
+  color: var(--header-link-text);
+  border: 1px solid var(--header-link-edge);
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
 }
 
 .creator-main .puzzle-loader .day-chip {

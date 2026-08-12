@@ -2,72 +2,97 @@
  * Set tier colors — assigned by global discovery order across all outer grids.
  * 1st category set solved anywhere → bronze (row 1); 2nd new set → silver; etc.
  * Same tier = same color and row in every grid. Palette: Bronze / Silver / Gold / Platinum.
+ * Refined for mint-on-charcoal glass aesthetic while staying distinguishable.
  */
 
 /* ── Tier 0: Bronze (1st group assembled) ── */
 .grid-block.locked.cat-0 {
-  background: linear-gradient(180deg, #b8825a 0%, #966341 52%, #7a4f32 100%);
+  background: linear-gradient(165deg, #c48a5c 0%, #a06a40 52%, #7e5230 100%);
   color: #fff5eb;
   -webkit-text-stroke-color: #3a2410;
   box-shadow:
     0 2px 0 #4a3520,
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    0 0 10px rgba(184, 130, 90, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .selection-output.answers .locked-line.cat-0,
 .category-slot.revealed.cat-0 {
-  background: rgba(184, 130, 90, 0.18);
-  border-color: rgba(184, 130, 90, 0.45);
+  background: rgba(184, 130, 90, 0.16);
+  border-color: rgba(200, 150, 100, 0.5);
   color: #e8b88a;
+}
+
+.category-slot.revealed.cat-0 .category-icon {
+  color: #e8b88a;
+  filter: drop-shadow(0 0 4px rgba(232, 184, 138, 0.35));
 }
 
 /* ── Tier 1: Silver (2nd) ── */
 .grid-block.locked.cat-1 {
-  background: linear-gradient(180deg, #a8b2bc 0%, #88929c 52%, #6e7780 100%);
+  background: linear-gradient(165deg, #b0bac4 0%, #88929c 52%, #6a737c 100%);
   color: #f8fafc;
   -webkit-text-stroke-color: #2a3036;
   box-shadow:
     0 2px 0 #3d4348,
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    0 0 10px rgba(168, 178, 188, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
 
 .selection-output.answers .locked-line.cat-1,
 .category-slot.revealed.cat-1 {
-  background: rgba(168, 178, 188, 0.18);
-  border-color: rgba(168, 178, 188, 0.45);
+  background: rgba(168, 178, 188, 0.16);
+  border-color: rgba(180, 190, 200, 0.48);
   color: #d0d8e0;
+}
+
+.category-slot.revealed.cat-1 .category-icon {
+  color: #d0d8e0;
+  filter: drop-shadow(0 0 4px rgba(208, 216, 224, 0.3));
 }
 
 /* ── Tier 2: Gold (3rd) ── */
 .grid-block.locked.cat-2 {
-  background: linear-gradient(180deg, #d9b84a 0%, #b89832 52%, #967a22 100%);
+  background: linear-gradient(165deg, #e0c04e 0%, #c09e30 52%, #9a7c1e 100%);
   color: #fffef5;
   -webkit-text-stroke-color: #4a3a10;
   box-shadow:
     0 2px 0 #5c4a15,
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    0 0 12px rgba(217, 184, 74, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
 
 .selection-output.answers .locked-line.cat-2,
 .category-slot.revealed.cat-2 {
-  background: rgba(217, 184, 74, 0.18);
-  border-color: rgba(217, 184, 74, 0.45);
+  background: rgba(217, 184, 74, 0.16);
+  border-color: rgba(220, 190, 80, 0.5);
   color: #ecd06a;
+}
+
+.category-slot.revealed.cat-2 .category-icon {
+  color: #ecd06a;
+  filter: drop-shadow(0 0 4px rgba(236, 208, 106, 0.35));
 }
 
 /* ── Tier 3: Platinum (4th) ── */
 .grid-block.locked.cat-3 {
-  background: linear-gradient(180deg, #c8d4de 0%, #a8b4be 52%, #88929a 100%);
+  background: linear-gradient(165deg, #d0dce6 0%, #aeb8c2 52%, #8a949c 100%);
   color: #1a2030;
   -webkit-text-stroke-color: #eef2f6;
   box-shadow:
     0 2px 0 #4a5560,
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    0 0 12px rgba(200, 212, 222, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .selection-output.answers .locked-line.cat-3,
 .category-slot.revealed.cat-3 {
-  background: rgba(200, 212, 222, 0.16);
-  border-color: rgba(200, 212, 222, 0.42);
+  background: rgba(200, 212, 222, 0.14);
+  border-color: rgba(200, 212, 222, 0.45);
   color: #e2eaf2;
+}
+
+.category-slot.revealed.cat-3 .category-icon {
+  color: #e2eaf2;
+  filter: drop-shadow(0 0 4px rgba(226, 234, 242, 0.3));
 }

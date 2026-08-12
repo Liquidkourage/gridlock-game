@@ -1,14 +1,15 @@
 .category-reveal {
   background:
-    linear-gradient(165deg, rgba(160, 195, 90, 0.1) 0%, transparent 45%),
+    linear-gradient(165deg, color-mix(in srgb, var(--mint) 12%, transparent) 0%, transparent 45%),
     linear-gradient(180deg, var(--card-top) 0%, var(--card-bot) 100%);
-  border: 1px solid rgba(160, 195, 90, 0.35);
-  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mint) 32%, transparent);
+  border-radius: 14px;
   padding: var(--category-pad, 10px);
   box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.28),
-    0 0 0 1px rgba(160, 195, 90, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 14px 36px rgba(0, 0, 0, 0.35),
+    0 0 24px color-mix(in srgb, var(--mint) 10%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
   width: var(--category-card-width, 200px);
   height: var(--category-card-height, 210px);
   min-width: 180px;
@@ -21,17 +22,38 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.category-reveal::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--mint) 60%, transparent),
+    transparent
+  );
+  box-shadow: 0 0 10px color-mix(in srgb, var(--mint) 40%, transparent);
+  pointer-events: none;
 }
 
 .category-reveal h3 {
   margin: 0 0 calc(var(--cell-gap, 6px) * 0.4);
+  font-family: var(--font-display);
   font-size: var(--tile-font, 13px);
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.22em;
+  text-indent: 0.1em;
   text-transform: uppercase;
-  color: rgba(160, 195, 90, 0.85);
+  color: var(--mint);
   text-align: center;
   flex: 0 0 auto;
+  text-shadow: 0 0 12px color-mix(in srgb, var(--mint) 45%, transparent);
 }
 
 .category-rows {
@@ -43,41 +65,71 @@
 }
 
 .category-slot {
-  border-radius: 5px;
+  border-radius: 7px;
   padding: 0 8px;
   min-height: var(--category-line-h, 28px);
   height: 100%;
   box-sizing: border-box;
   line-height: 1;
   text-align: center;
-  font-size: clamp(12px, var(--tile-font, 13px), 16px);
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  font-family: var(--font-display);
+  font-size: clamp(11px, var(--tile-font, 13px), 15px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.22);
-  color: rgba(255, 255, 255, 0.22);
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--mint) 8%, transparent);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.28);
+  color: color-mix(in srgb, var(--mint) 28%, transparent);
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.category-slot-empty {
+  letter-spacing: 0.2em;
+  opacity: 0.55;
+  font-weight: 500;
 }
 
 .category-slot.revealed {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: color-mix(in srgb, var(--mint) 22%, transparent);
+  background:
+    linear-gradient(165deg, color-mix(in srgb, var(--mint) 8%, transparent) 0%, transparent 55%),
+    rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.category-icon {
+  flex: 0 0 auto;
+  opacity: 0.85;
+  color: var(--mint);
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--mint) 35%, transparent));
+}
+
+.category-slot-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .category-complete {
   margin: calc(var(--cell-gap, 6px) * 0.3) 0 0;
   text-align: center;
-  color: var(--cat-green, #9be59b);
+  color: var(--mint);
+  font-family: var(--font-display);
   font-size: var(--tile-font, 13px);
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   line-height: 1.2;
   flex: 0 0 auto;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--mint) 40%, transparent);
 }
 
 html[data-layout="mobile"] .category-reveal {
