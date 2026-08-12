@@ -46,23 +46,17 @@ function solvePlayLayout(vw: number, vh: number) {
     const cardW = board + cardPad * 2
     const cardH = board + cardPad * 2 + chromeH
 
-    // Categories needs a usable minimum; gap must clear that panel
-    const categoryMin = 168
+    // Categories needs taller slots (match Answers row height) and a usable panel
+    const categoryLineH = answerLineH
+    const categoryRowGap = Math.max(4, answersRowGap)
+    const categoryLabelH = Math.max(14, Math.round(tileFont * 0.95))
+    const categoryPad = Math.max(8, Math.round(cardPad * 0.75))
+    const categoryH =
+      categoryPad * 2 + categoryLabelH + categoryLineH * 4 + categoryRowGap * 3 + 8
+    const categoryW = Math.max(180, Math.round(categoryH * 0.95))
     const gridGap = isMobile
       ? Math.max(12, Math.round(cellGap * 2))
-      : Math.max(categoryMin + 20, Math.min(220, Math.round(Math.min(cardW, cardH) * 0.36)))
-
-    const categoryPad = Math.max(8, Math.round(gridGap * 0.07))
-    const categorySize = isMobile
-      ? Math.max(140, Math.min(playW - 24, 220))
-      : Math.max(categoryMin, gridGap - 16)
-    const categoryInner = categorySize - categoryPad * 2
-    const categoryLabelH = Math.max(14, Math.round(tileFont * 0.95))
-    const categoryRowGap = Math.max(4, Math.round(cellGap * 0.5))
-    const categoryLineH = Math.max(
-      18,
-      Math.floor((categoryInner - categoryLabelH - categoryRowGap * 3 - 6) / 4)
-    )
+      : Math.max(categoryH + 20, categoryW + 20, Math.min(240, Math.round(Math.min(cardW, cardH) * 0.38)))
 
     return {
       cardPad,
@@ -78,8 +72,8 @@ function solvePlayLayout(vw: number, vh: number) {
       cardH,
       gridGap,
       categoryPad,
-      categoryW: categorySize,
-      categoryH: categorySize,
+      categoryW: isMobile ? Math.max(160, Math.min(playW - 24, categoryW)) : categoryW,
+      categoryH: isMobile ? Math.max(160, Math.min(playW - 24, categoryH)) : categoryH,
       categoryLineH,
       categoryRowGap,
     }

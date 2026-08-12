@@ -9,12 +9,12 @@
     0 12px 32px rgba(0, 0, 0, 0.28),
     0 0 0 1px rgba(160, 195, 90, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  width: var(--category-card-width, 168px);
-  height: var(--category-card-height, 168px);
-  min-width: 168px;
-  min-height: 168px;
-  max-width: min(var(--category-card-width, 168px), calc(var(--grid-gap, 188px) - 12px));
-  max-height: min(var(--category-card-height, 168px), calc(var(--grid-gap, 188px) - 12px));
+  width: var(--category-card-width, 200px);
+  height: var(--category-card-height, 210px);
+  min-width: 180px;
+  min-height: 200px;
+  max-width: min(var(--category-card-width, 200px), calc(var(--grid-gap, 220px) - 12px));
+  max-height: min(var(--category-card-height, 210px), calc(var(--grid-gap, 220px) - 12px));
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -33,7 +33,7 @@
 
 .category-rows {
   display: grid;
-  grid-template-rows: repeat(4, minmax(var(--category-line-h, 18px), 1fr));
+  grid-template-rows: repeat(4, minmax(var(--category-line-h, 28px), 1fr));
   gap: var(--category-row-gap, 4px);
   flex: 1 1 auto;
   min-height: 0;
@@ -41,13 +41,13 @@
 
 .category-slot {
   border-radius: 5px;
-  padding: 0 6px;
-  min-height: var(--category-line-h, 18px);
+  padding: 0 8px;
+  min-height: var(--category-line-h, 28px);
   height: 100%;
   box-sizing: border-box;
   line-height: 1;
   text-align: center;
-  font-size: clamp(11px, var(--tile-font, 13px), 16px);
+  font-size: clamp(12px, var(--tile-font, 13px), 16px);
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
