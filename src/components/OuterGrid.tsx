@@ -103,12 +103,17 @@ export function OuterGrid({
             const answer = lockedAnswers.find(
               a => tierIndex(a.categorySetIndex, discoveredCategories) === tier
             )
-            return answer ? (
-              <div key={tier} className={`locked-line cat-${tier}`}>
-                {answer.text.split(" ").join("")}
+            if (!answer) {
+              return <div key={tier} className="locked-line locked-line-empty" aria-hidden="true" />
+            }
+            const displayText = answer.text.split(" ").join("")
+            const len = displayText.length
+            const lenClass =
+              len <= 7 ? "ans-short" : len <= 9 ? "ans-mid" : len <= 11 ? "ans-long" : "ans-xl"
+            return (
+              <div key={tier} className={`locked-line cat-${tier} ${lenClass}`}>
+                {displayText}
               </div>
-            ) : (
-              <div key={tier} className="locked-line locked-line-empty" aria-hidden="true" />
             )
           })}
         </div>
