@@ -1,5 +1,6 @@
 .gridlock-game {
-  max-width: var(--game-max-w, 1040px);
+  max-width: var(--game-max-w, 1200px);
+  width: 100%;
   margin: 0 auto;
   min-height: 0;
   max-height: 100%;
@@ -17,6 +18,7 @@
   gap: var(--grid-gap, 12px);
   position: relative;
   width: fit-content;
+  max-width: 100%;
 }
 
 .play-cell-categories {
@@ -30,6 +32,60 @@
 
 .play-cell-categories > * {
   pointer-events: auto;
+}
+
+/* Phone: single column, vertical scroll OK */
+html[data-layout="mobile"] .app {
+  height: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html[data-layout="mobile"] body,
+html[data-layout="mobile"] #root {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html[data-layout="mobile"] .app-main {
+  overflow: visible;
+  align-items: flex-start;
+  padding-bottom: 24px;
+}
+
+html[data-layout="mobile"] .gridlock-game {
+  max-height: none;
+  overflow: visible;
+}
+
+html[data-layout="mobile"] .play-layout {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  width: 100%;
+  max-width: var(--outer-card-width, 100%);
+  gap: calc(var(--grid-gap, 12px) + 8px);
+  justify-items: center;
+}
+
+html[data-layout="mobile"] .play-cell-categories {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  order: -1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+html[data-layout="mobile"] .outer-grid {
+  width: min(100%, var(--outer-card-width, 100%));
+  height: auto;
 }
 
 .grid-board-wrap {
@@ -73,7 +129,7 @@
   border: none;
   border-radius: 6px;
   color: var(--tile-text);
-  font-size: clamp(11px, 5.5cqi, var(--tile-font, 16px));
+  font-size: clamp(13px, 6.4cqi, var(--tile-font, 20px));
   font-weight: 800;
   letter-spacing: 0.01em;
   text-transform: uppercase;
@@ -88,9 +144,9 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   box-sizing: border-box;
-  /* Modest inset — enough to clear edges, room for larger type */
-  padding-block: max(2px, 4%);
-  padding-inline: max(5px, 9%);
+  /* Modest inset — letters clear edges without starving type */
+  padding-block: max(2px, 5%);
+  padding-inline: max(4px, 7%);
   line-height: 1;
   text-align: center;
   background: linear-gradient(
@@ -134,12 +190,12 @@
 }
 
 .grid-block-text.len-3 {
-  font-size: 0.94em;
+  font-size: 0.95em;
   letter-spacing: 0;
 }
 
 .grid-block-text.len-4 {
-  font-size: 0.86em;
+  font-size: 0.88em;
   letter-spacing: -0.02em;
 }
 

@@ -13,11 +13,11 @@
   flex-direction: column;
   align-items: stretch;
   overflow: hidden;
-  width: var(--outer-card-size, 320px);
-  height: var(--outer-card-size, 320px);
-  aspect-ratio: 1 / 1;
+  width: var(--outer-card-width, var(--outer-card-size, 320px));
+  height: var(--outer-card-height, auto);
+  aspect-ratio: auto;
   flex: 0 0 auto;
-  max-width: none;
+  max-width: 100%;
   justify-self: center;
   box-sizing: border-box;
 }

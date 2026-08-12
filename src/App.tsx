@@ -5,44 +5,59 @@ import { CreatorPage } from "./pages/CreatorPage"
 import { navigate, usePathname } from "./router"
 import { useTheme } from "./theme"
 
-/** Largest integer square card that fits a 2×2 + center gap in the play area. */
-function solveSquareLayout(vw: number, vh: number) {
-  const headerHeight = Math.max(36, Math.min(52, Math.round(vh * 0.05)))
-  const mainPad = Math.max(4, Math.round(Math.min(vw, vh) * 0.006))
-  const playW = Math.max(280, vw - mainPad * 2)
-  const playH = Math.max(280, vh - headerHeight - mainPad * 2)
+/**
+ * Board-first layout:
+ * - 4×4 board and cells stay square
+ * - Cards are NOT forced square (chrome sits below the board) so boards can grow
+ * - Center gap sized to fit Categories without starving the grids
+ */
+function solvePlayLayout(vw: number, vh: number) {
+  const isMobile = vw < 720
+  const headerHeight = isMobile
+    ? Math.max(40, Math.min(48, Math.round(vh * 0.055)))
+    : Math.max(36, Math.min(48, Math.round(vh * 0.045)))
+  const mainPad = isMobile
+    ? Math.max(6, Math.round(vw * 0.02))
+    : Math.max(4, Math.round(Math.min(vw, vh) * 0.008))
 
-  // Scale chrome with card size so squares stay proportional
-  const estimateChrome = (card: number) => {
-    const cardPad = Math.max(6, Math.round(card * 0.035))
-    const cellGap = Math.max(3, Math.round(card * 0.018))
-    const tileFont = Math.max(11, Math.min(17, Math.round(card * 0.048)))
-    const selectionRowH = Math.max(22, Math.min(32, Math.round(card * 0.09)))
-    const answerLineH = tileFont + Math.max(6, Math.round(tileFont * 0.55))
+  const playW = Math.max(280, vw - mainPad * 2)
+  const playH = Math.max(240, vh - headerHeight - mainPad * 2)
+
+  const chromeFor = (board: number) => {
+    const cardPad = Math.max(6, Math.min(14, Math.round(board * 0.04)))
+    const cellGap = Math.max(3, Math.min(8, Math.round(board * 0.022)))
+    // Readable tile type scales with board (~cell size * 0.42)
+    const tileFont = Math.max(12, Math.min(22, Math.round(board * 0.095)))
+    const selectionRowH = Math.max(24, Math.min(34, Math.round(board * 0.1)))
+    const answerLineH = Math.max(14, Math.min(22, Math.round(tileFont * 0.95)))
     const answersRowGap = Math.max(2, Math.round(cellGap * 0.35))
-    const labelH = Math.round(tileFont * 1.15) + 2
-    const answersPaneH = labelH + answerLineH * 4 + answersRowGap * 3 + 2
-    const sectionGap = Math.max(2, Math.round(cellGap * 0.5))
+    const labelH = Math.max(12, Math.round(tileFont * 0.85))
+    const answersPaneH = labelH + answerLineH * 4 + answersRowGap * 3 + 4
+    const sectionGap = Math.max(2, Math.round(cellGap * 0.45))
     const chromeH =
       labelH +
       sectionGap +
       sectionGap +
       selectionRowH +
       sectionGap +
-      Math.round(cellGap * 0.3) +
+      Math.round(cellGap * 0.25) +
       answersPaneH
 
-    // Center gap is intentional space: Categories fills nearly all of it
-    const gridGap = Math.max(100, Math.round(card * 0.48))
-    const categoryPad = Math.max(6, Math.round(gridGap * 0.06))
-    const categorySize = Math.max(88, gridGap - 14)
-    const categoryW = categorySize
-    const categoryH = categorySize
+    const cardW = board + cardPad * 2
+    const cardH = board + cardPad * 2 + chromeH
+
+    // Tighter center gap — Categories fills it, but doesn't dominate
+    const gridGap = isMobile
+      ? Math.max(12, Math.round(cellGap * 2))
+      : Math.max(96, Math.min(168, Math.round(Math.min(cardW, cardH) * 0.28)))
+
+    const categoryPad = Math.max(5, Math.round(gridGap * 0.06))
+    const categorySize = Math.max(80, gridGap - 12)
     const categoryInner = categorySize - categoryPad * 2
-    const categoryLabelH = Math.round(tileFont * 1.2) + 4
-    const categoryRowGap = Math.max(3, Math.round(cellGap * 0.45))
+    const categoryLabelH = Math.max(12, Math.round(tileFont * 0.9))
+    const categoryRowGap = Math.max(2, Math.round(cellGap * 0.4))
     const categoryLineH = Math.max(
-      answerLineH,
+      14,
       Math.floor((categoryInner - categoryLabelH - categoryRowGap * 3 - 4) / 4)
     )
 
@@ -56,81 +71,63 @@ function solveSquareLayout(vw: number, vh: number) {
       labelH,
       answersPaneH,
       chromeH,
+      cardW,
+      cardH,
+      gridGap,
       categoryPad,
-      categoryW,
-      categoryH,
+      categoryW: categorySize,
+      categoryH: categorySize,
       categoryLineH,
       categoryRowGap,
-      gridGap,
     }
   }
 
-  // Binary-search largest square card that fits: 2*card + gap ≤ playW/H
-  let lo = 160
-  let hi = Math.min(Math.floor(playW / 2), Math.floor(playH / 2), 420)
-  let best = lo
-  let bestChrome = estimateChrome(lo)
+  let board: number
+  let layout = chromeFor(160)
 
-  while (lo <= hi) {
-    const mid = Math.floor((lo + hi) / 2)
-    const chrome = estimateChrome(mid)
-    const totalW = mid * 2 + chrome.gridGap
-    const totalH = mid * 2 + chrome.gridGap
-    if (totalW <= playW && totalH <= playH) {
-      best = mid
-      bestChrome = chrome
-      lo = mid + 1
-    } else {
-      hi = mid - 1
-    }
-  }
-
-  // Square board inside square card: card = pad*2 + board + chrome
-  let board = best - bestChrome.cardPad * 2 - bestChrome.chromeH
-  if (board < 120) {
-    // Prefer readable board: grow card if viewport allows, else accept smaller board
-    const needed = 120 + bestChrome.cardPad * 2 + bestChrome.chromeH
-    const chrome2 = estimateChrome(needed)
-    const totalW = needed * 2 + chrome2.gridGap
-    const totalH = needed * 2 + chrome2.gridGap
-    if (totalW <= playW && totalH <= playH) {
-      best = needed
-      bestChrome = chrome2
-      board = best - bestChrome.cardPad * 2 - bestChrome.chromeH
-    } else {
-      board = Math.max(100, board)
-      // Re-lock card to exact square: pad*2 + board + chrome (may be slightly smaller than best)
-      best = bestChrome.cardPad * 2 + board + bestChrome.chromeH
-      bestChrome = estimateChrome(best)
-      board = Math.max(100, best - bestChrome.cardPad * 2 - bestChrome.chromeH)
-      best = bestChrome.cardPad * 2 + board + bestChrome.chromeH
-    }
+  if (isMobile) {
+    // Full-width board; page may scroll vertically
+    board = Math.max(200, Math.min(playW - 4, Math.floor(playW * 0.96)))
+    layout = chromeFor(board)
+    // If a single card is taller than viewport, still OK (scroll) — keep board wide
   } else {
-    // Exact square identity
-    best = bestChrome.cardPad * 2 + board + bestChrome.chromeH
-  }
+    // Binary-search largest board that fits 2×2 + gap in the play area
+    let lo = 140
+    let hi = Math.min(Math.floor(playW / 2), Math.floor(playH / 2), 380)
+    let best = lo
+    let bestLayout = chromeFor(lo)
 
-  // Final chrome pass at locked card size
-  const chrome = estimateChrome(best)
-  board = Math.max(100, best - chrome.cardPad * 2 - chrome.chromeH)
-  const card = chrome.cardPad * 2 + board + chrome.chromeH
-  const final = estimateChrome(card)
-  board = Math.max(100, card - final.cardPad * 2 - final.chromeH)
-  const outerCardSize = final.cardPad * 2 + board + final.chromeH
+    while (lo <= hi) {
+      const mid = Math.floor((lo + hi) / 2)
+      const L = chromeFor(mid)
+      const totalW = L.cardW * 2 + L.gridGap
+      const totalH = L.cardH * 2 + L.gridGap
+      if (totalW <= playW && totalH <= playH) {
+        best = mid
+        bestLayout = L
+        lo = mid + 1
+      } else {
+        hi = mid - 1
+      }
+    }
+    board = best
+    layout = bestLayout
+  }
 
   return {
+    isMobile,
     headerHeight,
     mainPad,
-    h1Size: Math.max(20, Math.min(28, Math.round(vh * 0.026))),
-    gameMaxW: Math.min(playW, outerCardSize * 2 + final.gridGap),
-    outerCardSize,
+    h1Size: Math.max(18, Math.min(26, Math.round(vh * 0.024))),
+    gameMaxW: isMobile
+      ? playW
+      : Math.min(playW, layout.cardW * 2 + layout.gridGap),
     outerBoardMax: board,
-    ...final,
-    answersPaneH: final.answersPaneH,
-    categoryCardWidth: final.categoryW,
-    categoryCardHeight: final.categoryH,
-    categoryLineH: final.categoryLineH,
-    categoryRowGap: final.categoryRowGap,
+    outerCardWidth: layout.cardW,
+    outerCardHeight: layout.cardH,
+    ...layout,
+    categoryCardWidth: layout.categoryW,
+    categoryCardHeight: layout.categoryH,
   }
 }
 
@@ -138,8 +135,10 @@ function applyLayoutVars() {
   const vv = window.visualViewport
   const vw = Math.round(vv?.width ?? window.innerWidth)
   const vh = Math.round(vv?.height ?? window.innerHeight)
-  const layout = solveSquareLayout(vw, vh)
+  const layout = solvePlayLayout(vw, vh)
   const root = document.documentElement.style
+
+  document.documentElement.dataset.layout = layout.isMobile ? "mobile" : "desktop"
 
   root.setProperty("--app-header-height", `${layout.headerHeight}px`)
   root.setProperty("--app-header-pad", `${Math.max(4, Math.round(layout.headerHeight * 0.12))}px`)
@@ -156,7 +155,10 @@ function applyLayoutVars() {
   root.setProperty("--card-chrome-h", `${layout.chromeH}px`)
   root.setProperty("--game-max-w", `${layout.gameMaxW}px`)
   root.setProperty("--outer-board-max", `${layout.outerBoardMax}px`)
-  root.setProperty("--outer-card-size", `${layout.outerCardSize}px`)
+  // Legacy alias: some CSS still referenced square card size — map to width
+  root.setProperty("--outer-card-size", `${layout.outerCardWidth}px`)
+  root.setProperty("--outer-card-width", `${layout.outerCardWidth}px`)
+  root.setProperty("--outer-card-height", `${layout.outerCardHeight}px`)
   root.setProperty("--category-card-width", `${layout.categoryCardWidth}px`)
   root.setProperty("--category-card-height", `${layout.categoryCardHeight}px`)
   root.setProperty("--category-line-h", `${layout.categoryLineH}px`)
