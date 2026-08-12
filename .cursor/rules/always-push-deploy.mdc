@@ -1,0 +1,22 @@
+---
+description: Auto commit, push, and Railway deploy after shippable GridLock changes
+alwaysApply: true
+---
+
+# Always push and deploy after shippable work
+
+After completing a **shippable** change in this GridLock project (UI/feature/fix the user would want live), do **not** ask whether to push. Automatically:
+
+1. **Commit** if there are relevant uncommitted changes
+   - Follow existing commit message style (`git log`)
+   - Use PowerShell-safe `-m` messages (no bash HEREDOC)
+   - Do not commit secrets (`.env`, credentials, etc.)
+2. **Push**: `git push origin` on the current branch (usually `master`)
+3. **Deploy**: `railway up -s gridlock-game -d` with a short `-m`
+
+## Hard limits
+
+- Do **not** force-push
+- Do **not** commit secrets
+- If the user later says **don't push** (or equivalent), skip push/deploy for that turn
+- Skip this workflow for non-shippable work (docs-only drafts, exploratory spikes, WIP the user did not ask to ship)
