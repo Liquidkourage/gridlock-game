@@ -54,9 +54,13 @@ function solvePlayLayout(vw: number, vh: number) {
     const categoryH =
       categoryPad * 2 + categoryLabelH + categoryLineH * 4 + categoryRowGap * 3 + 8
     const categoryW = Math.max(180, Math.round(categoryH * 0.95))
+    // Compact progress strip under Categories (groups · categories)
+    const hubMetaH = Math.max(22, Math.min(30, Math.round(tileFont * 1.55)))
+    const hubStackGap = Math.max(6, Math.round(cellGap * 0.9))
+    const hubStackH = categoryH + hubStackGap + hubMetaH
     const gridGap = isMobile
       ? Math.max(12, Math.round(cellGap * 2))
-      : Math.max(categoryH + 20, categoryW + 20, Math.min(240, Math.round(Math.min(cardW, cardH) * 0.38)))
+      : Math.max(hubStackH + 16, categoryW + 20, Math.min(240, Math.round(Math.min(cardW, cardH) * 0.38)))
 
     return {
       cardPad,
@@ -76,6 +80,8 @@ function solvePlayLayout(vw: number, vh: number) {
       categoryH: isMobile ? Math.max(160, Math.min(playW - 24, categoryH)) : categoryH,
       categoryLineH,
       categoryRowGap,
+      hubMetaH,
+      hubStackGap,
     }
   }
 
@@ -161,6 +167,8 @@ function applyLayoutVars() {
   root.setProperty("--category-line-h", `${layout.categoryLineH}px`)
   root.setProperty("--category-row-gap", `${layout.categoryRowGap}px`)
   root.setProperty("--category-pad", `${layout.categoryPad}px`)
+  root.setProperty("--hub-meta-h", `${layout.hubMetaH}px`)
+  root.setProperty("--hub-stack-gap", `${layout.hubStackGap}px`)
 }
 
 export default function App() {

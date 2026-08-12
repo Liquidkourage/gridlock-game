@@ -5,7 +5,11 @@ import { CategoryReveal } from "./CategoryReveal"
 import type { Answer, Block, GameState } from "../types/game"
 import type { Puzzle } from "../data/puzzles"
 import { loadPuzzle, shuffleDeterministic, rng, seedFromString } from "../data/puzzles"
-import { allCategorySetsComplete, getCategoryName } from "../utils/categorySets"
+import {
+  allCategorySetsComplete,
+  getCategoryName,
+  isCategorySetComplete,
+} from "../utils/categorySets"
 
 function buildBlocks(tokens: string[], gridId: number): Block[] {
   return tokens.map((text, index) => ({ id: `${gridId}-${index}`, text, gridIndex: gridId, position: index }))
@@ -255,9 +259,20 @@ export function GridLockGame() {
     return <div className="loading">Loading puzzle…</div>
   }
 
+  const groupsLocked = gameState.lockedAnswers.length
+  const categoriesFound = [0, 1, 2, 3].filter(i =>
+    isCategorySetComplete(gameState.lockedAnswers, i)
+  ).length
+
   return (
     <div className="gridlock-game">
       <div className="play-layout">
+        <div className="ambient-bridge" aria-hidden="true">
+          <div className="ambient-tray ambient-tray-h" />
+          <div className="ambient-tray ambient-tray-v" />
+          <div className="ambient-rails" />
+          <div className="ambient-glow" />
+        </div>
         {grids.map(grid => (
           <div key={grid.id} className="play-cell">
             <OuterGrid
@@ -278,12 +293,25 @@ export function GridLockGame() {
           </div>
         ))}
         <div className="play-cell play-cell-categories">
-          <CategoryReveal
-            categoryNames={categoryNames}
-            lockedAnswers={gameState.lockedAnswers}
-            discoveredCategories={gameState.discoveredOuterCategories}
-            gameComplete={gameState.gameComplete}
-          />
+          <div className="center-hub">
+            <CategoryReveal
+              categoryNames={categoryNames}
+              lockedAnswers={gameState.lockedAnswers}
+              discoveredCategories={gameState.discoveredOuterCategories}
+              gameComplete={gameState.gameComplete}
+            />
+            <div className="hub-progress" aria-live="polite">
+              <span className="hub-progress-stat">
+                {groupsLocked}/16 groups
+              </span>
+              <span className="hub-progress-sep" aria-hidden="true">
+                ·
+              </span>
+              <span className="hub-progress-stat">
+                {categoriesFound} {categoriesFound === 1 ? "category" : "categories"}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

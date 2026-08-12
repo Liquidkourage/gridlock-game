@@ -14,7 +14,10 @@
   min-width: 180px;
   min-height: 200px;
   max-width: min(var(--category-card-width, 200px), calc(var(--grid-gap, 220px) - 12px));
-  max-height: min(var(--category-card-height, 210px), calc(var(--grid-gap, 220px) - 12px));
+  max-height: min(
+    var(--category-card-height, 210px),
+    calc(var(--grid-gap, 220px) - var(--hub-meta-h, 26px) - var(--hub-stack-gap, 8px) - 20px)
+  );
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -75,4 +78,12 @@
   font-weight: 700;
   line-height: 1.2;
   flex: 0 0 auto;
+}
+
+html[data-layout="mobile"] .category-reveal {
+  width: min(100%, var(--category-card-width, 200px));
+  max-width: 100%;
+  max-height: none;
+  height: auto;
+  min-height: var(--category-card-height, 200px);
 }
