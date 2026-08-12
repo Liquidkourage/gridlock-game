@@ -26,13 +26,13 @@ function solvePlayLayout(vw: number, vh: number) {
   const chromeFor = (board: number) => {
     const cardPad = Math.max(6, Math.min(14, Math.round(board * 0.04)))
     const cellGap = Math.max(3, Math.min(8, Math.round(board * 0.022)))
-    // Readable tile type scales with board (~cell size * 0.42)
     const tileFont = Math.max(12, Math.min(22, Math.round(board * 0.095)))
     const selectionRowH = Math.max(24, Math.min(34, Math.round(board * 0.1)))
-    const answerLineH = Math.max(14, Math.min(22, Math.round(tileFont * 0.95)))
-    const answersRowGap = Math.max(2, Math.round(cellGap * 0.35))
+    const answerLineH = Math.max(16, Math.min(24, Math.round(tileFont * 1.05)))
+    const answersRowGap = Math.max(3, Math.round(cellGap * 0.4))
     const labelH = Math.max(12, Math.round(tileFont * 0.85))
-    const answersPaneH = labelH + answerLineH * 4 + answersRowGap * 3 + 4
+    // Answers are 2×2 — only two rows of chrome height
+    const answersPaneH = labelH + answerLineH * 2 + answersRowGap + 6
     const sectionGap = Math.max(2, Math.round(cellGap * 0.45))
     const chromeH =
       labelH +
@@ -46,19 +46,22 @@ function solvePlayLayout(vw: number, vh: number) {
     const cardW = board + cardPad * 2
     const cardH = board + cardPad * 2 + chromeH
 
-    // Tighter center gap — Categories fills it, but doesn't dominate
+    // Categories needs a usable minimum; gap must clear that panel
+    const categoryMin = 168
     const gridGap = isMobile
       ? Math.max(12, Math.round(cellGap * 2))
-      : Math.max(96, Math.min(168, Math.round(Math.min(cardW, cardH) * 0.28)))
+      : Math.max(categoryMin + 20, Math.min(220, Math.round(Math.min(cardW, cardH) * 0.36)))
 
-    const categoryPad = Math.max(5, Math.round(gridGap * 0.06))
-    const categorySize = Math.max(80, gridGap - 12)
+    const categoryPad = Math.max(8, Math.round(gridGap * 0.07))
+    const categorySize = isMobile
+      ? Math.max(140, Math.min(playW - 24, 220))
+      : Math.max(categoryMin, gridGap - 16)
     const categoryInner = categorySize - categoryPad * 2
-    const categoryLabelH = Math.max(12, Math.round(tileFont * 0.9))
-    const categoryRowGap = Math.max(2, Math.round(cellGap * 0.4))
+    const categoryLabelH = Math.max(14, Math.round(tileFont * 0.95))
+    const categoryRowGap = Math.max(4, Math.round(cellGap * 0.5))
     const categoryLineH = Math.max(
-      14,
-      Math.floor((categoryInner - categoryLabelH - categoryRowGap * 3 - 4) / 4)
+      18,
+      Math.floor((categoryInner - categoryLabelH - categoryRowGap * 3 - 6) / 4)
     )
 
     return {
